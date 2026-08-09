@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Classic Mojito",
+    "description": "Refreshing cocktail with fresh mint, lime, sugar, and sparkling soda.",
+    "price": 8.5,
+    "image": "/images/food/colddrink.jpg"
+  },
+  {
+    "name": "Strawberry Mojito",
+    "description": "A fruity twist on the classic mojito with fresh strawberries, mint, and lime.",
+    "price": 9.5,
+    "image": "/images/food/colddrink2.jpg"
+  },
+  {
+    "name": "Tropical Paradise",
+    "description": "A tropical cocktail blend with exotic fruit flavors and a refreshing finish.",
+    "price": 10.0,
+    "image": "/images/food/colddrink3.jpg"
+  },
+  {
+    "name": "Blue Lagoon",
+    "description": "A vibrant cocktail with citrus flavors, sweet notes, and a refreshing taste.",
+    "price": 9.75,
+    "image": "/images/food/colddrink4.jpg"
+  },
+  {
+    "name": "Berry Cooler",
+    "description": "A refreshing berry cocktail with mixed fruits and a chilled sparkling finish.",
+    "price": 10.5,
+    "image": "/images/food/colddrink5.jpg"
+  },
+  {
+    "name": "Sunset Cocktail",
+    "description": "A colorful signature cocktail with layered fruit flavors and a smooth finish.",
+    "price": 11.5,
+    "image": "/images/food/colddrink6.avif"
+  },
+  {
+    "name": "Citrus Sparkle",
+    "description": "A fresh citrus cocktail with lemon, orange notes, and sparkling soda.",
+    "price": 8.75,
+    "image": "/images/food/colddrink7.jpg"
+  }
+]

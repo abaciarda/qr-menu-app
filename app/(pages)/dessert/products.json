@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Chocolate Lava Cake",
+    "description": "Warm chocolate cake with a rich molten center, served with a sweet finishing touch.",
+    "price": 8.5,
+    "image": "/images/food/dessert.jpg"
+  },
+  {
+    "name": "Classic Cheesecake",
+    "description": "Creamy cheesecake with a smooth texture and a delicious biscuit base.",
+    "price": 9.75,
+    "image": "/images/food/dessert2.jpg"
+  },
+  {
+    "name": "Strawberry Tart",
+    "description": "Fresh strawberries on a buttery tart base with creamy vanilla filling.",
+    "price": 8.95,
+    "image": "/images/food/dessert3.jpg"
+  },
+  {
+    "name": "Tiramisu",
+    "description": "Traditional Italian dessert with coffee-soaked layers, mascarpone cream, and cocoa.",
+    "price": 10.5,
+    "image": "/images/food/dessert4.jpg"
+  },
+  {
+    "name": "Chocolate Brownie",
+    "description": "Rich chocolate brownie with a soft center and intense cocoa flavor.",
+    "price": 7.5,
+    "image": "/images/food/dessert5.jpg"
+  },
+  {
+    "name": "Vanilla Cream Dessert",
+    "description": "Smooth vanilla cream dessert with a light and refreshing taste.",
+    "price": 7.95,
+    "image": "/images/food/dessert6.jpg"
+  },
+  {
+    "name": "Caramel Pudding",
+    "description": "Silky caramel pudding with a sweet glaze and creamy texture.",
+    "price": 8.25,
+    "image": "/images/food/dessert7.jpg"
+  },
+  {
+    "name": "Premium Dessert Plate",
+    "description": "A special dessert selection with chocolate, cream, and fresh toppings.",
+    "price": 12.0,
+    "image": "/images/food/dessert8.jpg"
+  }
+]

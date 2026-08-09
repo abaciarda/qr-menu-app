@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Classic Espresso",
+    "description": "Strong and aromatic espresso made from freshly ground coffee beans.",
+    "price": 3.5,
+    "image": "/images/food/coffee.jpg"
+  },
+  {
+    "name": "Cappuccino",
+    "description": "Espresso combined with steamed milk and a rich layer of milk foam.",
+    "price": 5.5,
+    "image": "/images/food/coffee2.jpg"
+  },
+  {
+    "name": "Caramel Latte",
+    "description": "Smooth espresso with steamed milk and sweet caramel flavor.",
+    "price": 6.25,
+    "image": "/images/food/coffee3.jpg"
+  },
+  {
+    "name": "Iced Coffee",
+    "description": "Refreshing cold coffee served with ice and a smooth creamy finish.",
+    "price": 5.75,
+    "image": "/images/food/coffee4.jpg"
+  },
+  {
+    "name": "Mocha Coffee",
+    "description": "A delicious blend of espresso, chocolate, steamed milk, and cream.",
+    "price": 6.5,
+    "image": "/images/food/coffee5.jpg"
+  },
+  {
+    "name": "Vanilla Latte",
+    "description": "Creamy espresso latte with a sweet vanilla aroma and smooth texture.",
+    "price": 6.0,
+    "image": "/images/food/coffee6.jpg"
+  },
+  {
+    "name": "Premium Coffee",
+    "description": "Specially prepared coffee with rich flavor and a premium presentation.",
+    "price": 7.5,
+    "image": "/images/food/coffee7.webp"
+  }
+]

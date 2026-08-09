@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Classic Beef Burger",
+    "description": "Juicy beef patty with cheddar, lettuce, tomato, onion, pickles, and house sauce.",
+    "price": 12.5,
+    "image": "/images/food/beefburger.jpg"
+  },
+  {
+    "name": "Double Cheese Burger",
+    "description": "Two beef patties, melted cheese, caramelized onions, lettuce, and special mustard mayo.",
+    "price": 15.0,
+    "image": "/images/food/beefburger2.jpg"
+  },
+  {
+    "name": "Spicy Bacon Burger",
+    "description": "Crispy bacon, pepper jack cheese, jalapeños, lettuce, tomato, and spicy chipotle mayo.",
+    "price": 16.25,
+    "image": "/images/food/beefburger3.jpg"
+  },
+  {
+    "name": "Signature Burger",
+    "description": "Seasoned beef, melted cheese, fresh greens, tomato, and creamy garlic sauce.",
+    "price": 14.75,
+    "image": "/images/food/beefburger4.webp"
+  },
+  {
+    "name": "Gourmet Lettuce Burger",
+    "description": "Soft bun, crisp lettuce, melted cheese, tomato, and house dressing.",
+    "price": 13.95,
+    "image": "/images/food/beefburger5.jpg"
+  },
+  {
+    "name": "Classic Double Burger",
+    "description": "Double beef patties with fresh vegetables, melted cheese, and signature burger sauce.",
+    "price": 17.5,
+    "image": "/images/food/beefburger6.jpg"
+  },
+  {
+    "name": "Premium BBQ Burger",
+    "description": "Grilled beef patty with smoky BBQ sauce, crispy onions, cheese, and fresh lettuce.",
+    "price": 18.25,
+    "image": "/images/food/beefburger7.webp"
+  },
+  {
+    "name": "Crispy Burger",
+    "description": "Crispy golden burger with cheese, lettuce, tomato, and creamy special sauce.",
+    "price": 13.75,
+    "image": "/images/food/beefburger8.jpg"
+  },
+  {
+    "name": "Ultimate Beef Burger",
+    "description": "Premium beef patty with extra cheese, fresh greens, pickles, and house sauce.",
+    "price": 19.5,
+    "image": "/images/food/beefburger9.jpg"
+  }
+]

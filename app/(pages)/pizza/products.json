@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Margherita Pizza",
+    "description": "Classic Italian pizza with tomato sauce, fresh mozzarella, basil, and olive oil.",
+    "price": 11.5,
+    "image": "/images/food/pizza.jpg"
+  },
+  {
+    "name": "Pepperoni Pizza",
+    "description": "Loaded with spicy pepperoni, mozzarella cheese, tomato sauce, and Italian herbs.",
+    "price": 14.0,
+    "image": "/images/food/pizza1.jpg"
+  },
+  {
+    "name": "Four Cheese Pizza",
+    "description": "A rich blend of mozzarella, cheddar, parmesan, and creamy cheese sauce.",
+    "price": 15.75,
+    "image": "/images/food/pizza2.webp"
+  },
+  {
+    "name": "BBQ Chicken Pizza",
+    "description": "Grilled chicken, smoky BBQ sauce, mozzarella, onions, and fresh herbs.",
+    "price": 16.5,
+    "image": "/images/food/pizza3.jpg"
+  },
+  {
+    "name": "Vegetable Garden Pizza",
+    "description": "Fresh vegetables, bell peppers, mushrooms, olives, mozzarella, and tomato sauce.",
+    "price": 13.25,
+    "image": "/images/food/pizza4.jpg"
+  },
+  {
+    "name": "Spicy Mexican Pizza",
+    "description": "Spicy peppers, jalapeños, seasoned beef, cheese, and special chili sauce.",
+    "price": 17.0,
+    "image": "/images/food/pizza5.jpg"
+  },
+  {
+    "name": "Seafood Pizza",
+    "description": "Premium seafood toppings with mozzarella, tomato sauce, and Mediterranean herbs.",
+    "price": 18.5,
+    "image": "/images/food/pizza6.webp"
+  },
+  {
+    "name": "Supreme Pizza",
+    "description": "A loaded pizza with pepperoni, mushrooms, olives, peppers, onions, and cheese.",
+    "price": 19.0,
+    "image": "/images/food/pizza7.jpg"
+  },
+  {
+    "name": "Truffle Mushroom Pizza",
+    "description": "Gourmet pizza with mushrooms, mozzarella, truffle sauce, and fresh herbs.",
+    "price": 20.5,
+    "image": "/images/food/pizza8.jpg"
+  }
+]
