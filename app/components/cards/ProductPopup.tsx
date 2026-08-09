@@ -97,7 +97,18 @@ export default function ProductPopup({ name, description, price, image, optionGr
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "tween", duration: 0.28, ease: "easeOut" }}
+            drag="y"
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={{ top: 0, bottom: 0.7 }}
+            dragSnapToOrigin
+            onDragEnd={(_, info) => {
+              if (info.offset.y > 90 || info.velocity.y > 350) {
+                onClose();
+              }
+            }}
           >
+            <div className="absolute top-2.5 left-1/2 -translate-x-1/2 z-20 w-12 h-1.5 rounded-full bg-white/60 backdrop-blur-md shadow-sm pointer-events-none" />
+
             <button
               onClick={onClose}
               className="absolute top-4 left-4 z-10 w-10 h-10 flex items-center justify-center bg-white/15 backdrop-blur-sm border border-white/20 rounded-full"
@@ -116,8 +127,8 @@ export default function ProductPopup({ name, description, price, image, optionGr
             </button>
 
             <div className="overflow-y-auto flex-1">
-              <div className="h-64 relative shrink-0">
-                <Image src={image} alt={name} fill sizes="448px" className="object-cover" />
+              <div className="h-64 relative shrink-0 bg-surface">
+                <Image src={image} alt={name} fill priority sizes="448px" className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
               </div>
 

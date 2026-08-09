@@ -28,13 +28,24 @@ export default function CartSheet() {
           }}
         >
           <motion.div
-            className="w-full max-w-md max-h-[92vh] bg-background rounded-t-2xl overflow-hidden flex flex-col"
+            className="w-full max-w-md max-h-[92vh] bg-background rounded-t-2xl overflow-hidden flex flex-col relative"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "tween", duration: 0.28, ease: "easeOut" }}
+            drag="y"
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={{ top: 0, bottom: 0.7 }}
+            dragSnapToOrigin
+            onDragEnd={(_, info) => {
+              if (info.offset.y > 90 || info.velocity.y > 350) {
+                closeCart();
+              }
+            }}
           >
-            <div className="flex items-center justify-between px-5 py-4 border-b border-line shrink-0">
+            <div className="w-12 h-1.5 rounded-full bg-line mx-auto mt-2.5 mb-1 shrink-0 pointer-events-none" />
+
+            <div className="flex items-center justify-between px-5 py-3 border-b border-line shrink-0">
               <div>
                 <h2 className="font-display font-bold text-xl text-ink">Your Order</h2>
                 <p className="text-xs text-ink-muted font-mono mt-0.5">{totalItems} item{totalItems !== 1 ? "s" : ""}</p>
