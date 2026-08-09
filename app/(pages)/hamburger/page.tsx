@@ -2,6 +2,7 @@ import CategorySlideView from "@/app/components/cards/CategorySlideView";
 import ProductCard from "@/app/components/cards/ProductCard";
 import { categoryConfig } from "@/app/data/categoryOptions";
 import burgers from "./products.json";
+import ContentAnimation from "@/app/components/ContentAnimation";
 
 export default function BurgerPage() {
   const { optionGroups, recommended } = categoryConfig.hamburger;
@@ -13,11 +14,11 @@ export default function BurgerPage() {
           <h1 className="font-display font-bold text-xl text-ink">Burgers</h1>
           <p className="text-sm text-ink-muted">{burgers.length} Products</p>
         </div>
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <ContentAnimation>
           {burgers.map((burger) => (
             <ProductCard key={burger.name} {...burger} optionGroups={optionGroups} recommended={recommended} />
           ))}
-        </div>
+        </ContentAnimation>
       </section>
     </div>
   );

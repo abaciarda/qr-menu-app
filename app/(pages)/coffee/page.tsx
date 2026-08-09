@@ -2,6 +2,7 @@ import CategorySlideView from "@/app/components/cards/CategorySlideView";
 import ProductCard from "@/app/components/cards/ProductCard";
 import { categoryConfig } from "@/app/data/categoryOptions";
 import coffees from "./products.json";
+import ContentAnimation from "@/app/components/ContentAnimation";
 
 export default function CoffeePage() {
   const { optionGroups, recommended } = categoryConfig.coffee;
@@ -13,11 +14,11 @@ export default function CoffeePage() {
           <h1 className="font-display font-bold text-xl text-ink">Coffees</h1>
           <p className="text-sm text-ink-muted">{coffees.length} Products</p>
         </div>
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <ContentAnimation>
           {coffees.map((item) => (
             <ProductCard key={item.name} {...item} optionGroups={optionGroups} recommended={recommended} />
           ))}
-        </div>
+        </ContentAnimation>
       </section>
     </div>
   );

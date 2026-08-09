@@ -2,6 +2,7 @@ import CategorySlideView from "@/app/components/cards/CategorySlideView";
 import ProductCard from "@/app/components/cards/ProductCard";
 import { categoryConfig } from "@/app/data/categoryOptions";
 import desserts from "./products.json";
+import ContentAnimation from "@/app/components/ContentAnimation";
 
 export default function DessertPage() {
   const { optionGroups, recommended } = categoryConfig.dessert;
@@ -13,11 +14,11 @@ export default function DessertPage() {
           <h1 className="font-display font-bold text-xl text-ink">Desserts</h1>
           <p className="text-sm text-ink-muted">{desserts.length} Products</p>
         </div>
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <ContentAnimation>
           {desserts.map((dessert) => (
             <ProductCard key={dessert.name} {...dessert} optionGroups={optionGroups} recommended={recommended} />
           ))}
-        </div>
+        </ContentAnimation>
       </section>
     </div>
   );

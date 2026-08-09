@@ -59,7 +59,7 @@ export default function CartSheet() {
             </div>
 
             {items.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center gap-3 text-ink-muted pb-10">
+              <div className="flex-1 flex flex-col items-center justify-center gap-3 text-ink-muted pb-10 pt-10">
                 <ShoppingBagIcon size={40} strokeWidth={1.5} />
                 <p className="text-sm font-medium">Your cart is empty</p>
                 <p className="text-xs text-ink-muted">Tap any item to add it to your list</p>

@@ -2,6 +2,7 @@ import CategorySlideView from "@/app/components/cards/CategorySlideView";
 import ProductCard from "@/app/components/cards/ProductCard";
 import { categoryConfig } from "@/app/data/categoryOptions";
 import coldDrinks from "./products.json";
+import ContentAnimation from "@/app/components/ContentAnimation";
 
 export default function ColdDrinkPage() {
   const { optionGroups, recommended } = categoryConfig["cold-drink"];
@@ -13,11 +14,11 @@ export default function ColdDrinkPage() {
           <h1 className="font-display font-bold text-xl text-ink">Cold Drinks</h1>
           <p className="text-sm text-ink-muted">{coldDrinks.length} Products</p>
         </div>
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <ContentAnimation>
           {coldDrinks.map((drink) => (
             <ProductCard key={drink.name} {...drink} optionGroups={optionGroups} recommended={recommended} />
           ))}
-        </div>
+        </ContentAnimation>
       </section>
     </div>
   );
