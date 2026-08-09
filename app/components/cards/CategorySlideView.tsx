@@ -40,6 +40,7 @@ export default function CategorySlideView() {
                                 <Image
                                     src={category.image}
                                     fill
+                                    priority
                                     sizes="64px"
                                     alt={category.name}
                                     className="object-cover"

@@ -26,6 +26,10 @@ export default function ProductCard({
 
   return (
     <>
+      <div className="hidden" aria-hidden="true">
+        <Image src={image} alt="" width={448} height={256} priority />
+      </div>
+
       <div
         onClick={() => setOpen(true)}
         className="flex gap-4 bg-surface px-4 py-4 rounded-2xl cursor-pointer hoverable-btn"
