@@ -8,6 +8,9 @@ import { useCart } from "@/app/context/CartContext";
 import { useFavorites } from "@/app/context/FavoritesContext";
 import { OptionGroup, RecommendedItem } from "@/app/data/categoryOptions";
 
+const BLUR_DATA_URL =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWY3Ii8+PC9zdmc+";
+
 type ProductPopupProps = {
   name: string;
   description: string;
@@ -128,7 +131,16 @@ export default function ProductPopup({ name, description, price, image, optionGr
 
             <div className="overflow-y-auto flex-1">
               <div className="h-64 relative shrink-0 bg-surface">
-                <Image src={image} alt={name} fill priority sizes="448px" className="object-cover" />
+                <Image
+                  src={image}
+                  alt={name}
+                  fill
+                  priority
+                  sizes="448px"
+                  placeholder="blur"
+                  blurDataURL={BLUR_DATA_URL}
+                  className="object-cover"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
               </div>
 

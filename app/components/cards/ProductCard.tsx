@@ -14,6 +14,9 @@ type ProductCardProps = {
   recommended?: RecommendedItem[];
 };
 
+const BLUR_DATA_URL =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWY3Ii8+PC9zdmc+";
+
 export default function ProductCard({
   name = "Egg Buster",
   description = "150gr Beef Burger, Egg, Cheese, Lettuce, Tomato, Onion, Pickles, Mayo",
@@ -42,8 +45,16 @@ export default function ProductCard({
           </p>
         </div>
 
-        <div className="size-24 shrink-0 relative rounded-xl overflow-hidden">
-          <Image src={image} alt={name} fill sizes="96px" className="object-cover" />
+        <div className="size-24 shrink-0 relative rounded-xl overflow-hidden bg-surface">
+          <Image
+            src={image}
+            alt={name}
+            fill
+            sizes="96px"
+            placeholder="blur"
+            blurDataURL={BLUR_DATA_URL}
+            className="object-cover"
+          />
         </div>
       </div>
 
