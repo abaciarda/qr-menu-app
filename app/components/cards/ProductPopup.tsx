@@ -95,7 +95,7 @@ export default function ProductPopup({ name, description, price, image, optionGr
           }}
         >
           <motion.div
-            className="w-full max-w-md max-h-[92vh] bg-background rounded-t-2xl overflow-hidden flex flex-col relative"
+            className="w-full max-w-md max-h-[87vh] bg-background rounded-t-2xl overflow-hidden flex flex-col relative"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
@@ -112,38 +112,38 @@ export default function ProductPopup({ name, description, price, image, optionGr
           >
             <div className="absolute top-2.5 left-1/2 -translate-x-1/2 z-20 w-12 h-1.5 rounded-full bg-white/60 backdrop-blur-md shadow-sm pointer-events-none" />
 
-            <button
-              onClick={onClose}
-              className="absolute top-4 left-4 z-10 w-10 h-10 flex items-center justify-center bg-white/15 backdrop-blur-sm border border-white/20 rounded-full"
-            >
-              <XIcon size={18} className="text-white" />
-            </button>
-
-            <button
-              onClick={() => toggle({ name, description, price, image, optionGroups, recommended })}
-              className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-white/15 backdrop-blur-sm border border-white/20 rounded-full transition-colors"
-            >
-              <HeartIcon
-                size={18}
-                className={favorited ? "text-accent fill-accent" : "text-white"}
+            <div className="h-64 relative shrink-0 bg-surface">
+              <Image
+                src={image}
+                alt={name}
+                fill
+                priority
+                sizes="448px"
+                placeholder="blur"
+                blurDataURL={BLUR_DATA_URL}
+                className="object-cover"
               />
-            </button>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+
+              <button
+                onClick={onClose}
+                className="absolute top-4 left-4 z-10 w-10 h-10 flex items-center justify-center bg-white/15 backdrop-blur-sm border border-white/20 rounded-full"
+              >
+                <XIcon size={18} className="text-white" />
+              </button>
+
+              <button
+                onClick={() => toggle({ name, description, price, image, optionGroups, recommended })}
+                className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-white/15 backdrop-blur-sm border border-white/20 rounded-full transition-colors"
+              >
+                <HeartIcon
+                  size={18}
+                  className={favorited ? "text-accent fill-accent" : "text-white"}
+                />
+              </button>
+            </div>
 
             <div className="overflow-y-auto flex-1">
-              <div className="h-64 relative shrink-0 bg-surface">
-                <Image
-                  src={image}
-                  alt={name}
-                  fill
-                  priority
-                  sizes="448px"
-                  placeholder="blur"
-                  blurDataURL={BLUR_DATA_URL}
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-              </div>
-
               <div className="px-5 pt-5 pb-6">
                 <div className="w-10 h-1 rounded-full bg-line mx-auto mb-5" />
 
