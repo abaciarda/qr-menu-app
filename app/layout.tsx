@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Archivo, Geist, Geist_Mono } from "next/font/google";
+import CartSheet from "./components/cart/CartSheet";
 import Footer from "./components/Footer";
 import Navigation from "./components/navigation/Navigation";
 import Sidebar from "./components/sidebar/Sidebar";
-import CartSheet from "./components/cart/CartSheet";
 import { CartProvider } from "./context/CartContext";
 import { FavoritesProvider } from "./context/FavoritesContext";
 import { SidebarProvider } from "./context/SidebarContext";

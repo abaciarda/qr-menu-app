@@ -1,9 +1,9 @@
-import CategoryCard, { Category } from "./components/cards/CategoryCard";
-import burgers from "./(pages)/hamburger/products.json";
-import pizzas from "./(pages)/pizza/products.json";
-import desserts from "./(pages)/dessert/products.json";
 import coffees from "./(pages)/coffee/products.json";
 import coldDrinks from "./(pages)/cold-drink/products.json";
+import desserts from "./(pages)/dessert/products.json";
+import burgers from "./(pages)/hamburger/products.json";
+import pizzas from "./(pages)/pizza/products.json";
+import CategoryCard, { Category } from "./components/cards/CategoryCard";
 
 const categories: Category[] = [
   { name: "Hamburger", image: "/images/categories/burger.png", count: burgers.length, link: "/hamburger" },
@@ -20,10 +20,10 @@ export default function Home() {
         Browse the menu and tell your waiter what you'd like.
       </div>
 
-      <section className="flex flex-col gap-5 px-5 py-4">
+      <section className="flex flex-col gap-5 px-5 py-4 max-w-7xl mx-auto w-full">
         <h1 className="text-xl font-semibold -mb-2">Categories</h1>
 
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-3 xl:grid-cols-4 gap-4">
           {categories.map((category) => (
             <CategoryCard key={category.name} {...category} />
           ))}
