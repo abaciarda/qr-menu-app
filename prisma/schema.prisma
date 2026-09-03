@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Category {
+  id               BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
+  name             String            @db.VarChar(100)
+  slug             String            @unique(map: "categories_slug_unique") @db.VarChar(100)
+  image            String            @db.VarChar(500)
+  sortOrder        Int               @default(0) @map("sort_order") @db.UnsignedTinyInt
+  isActive         Boolean           @default(true) @map("is_active")
+  createdAt        DateTime?         @map("created_at") @db.Timestamp(0)
+  updatedAt        DateTime?         @updatedAt @map("updated_at") @db.Timestamp(0)
+  optionGroups     OptionGroup[]
+  products         Product[]
+  recommendedItems RecommendedItem[]
+
+  @@index([isActive], map: "categories_is_active_index")
+  @@index([sortOrder], map: "categories_sort_order_index")
+  @@map("categories")
+}
+
+model Product {
+  id          BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  categoryId  BigInt      @map("category_id") @db.UnsignedBigInt
+  name        String      @db.VarChar(200)
+  description String      @db.Text
+  price       Decimal     @db.Decimal(8, 2)
+  image       String      @db.VarChar(500)
+  sortOrder   Int         @default(0) @map("sort_order") @db.UnsignedSmallInt
+  isAvailable Boolean     @default(true) @map("is_available")
+  createdAt   DateTime?   @map("created_at") @db.Timestamp(0)
+  updatedAt   DateTime?   @updatedAt @map("updated_at") @db.Timestamp(0)
+  orderItems  OrderItem[]
+  category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "products_category_id_foreign")
+
+  @@index([categoryId], map: "products_category_id_index")
+  @@index([isAvailable], map: "products_is_available_index")
+  @@index([sortOrder], map: "products_sort_order_index")
+  @@map("products")
+}
+
+model OptionGroup {
+  id         BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
+  categoryId BigInt              @map("category_id") @db.UnsignedBigInt
+  label      String              @db.VarChar(100)
+  isRequired Boolean             @default(false) @map("is_required")
+  sortOrder  Int                 @default(0) @map("sort_order") @db.UnsignedTinyInt
+  createdAt  DateTime?           @map("created_at") @db.Timestamp(0)
+  updatedAt  DateTime?           @updatedAt @map("updated_at") @db.Timestamp(0)
+  options    OptionGroupOption[]
+  category   Category            @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "option_groups_category_id_foreign")
+
+  @@index([categoryId], map: "option_groups_category_id_index")
+  @@index([sortOrder], map: "option_groups_sort_order_index")
+  @@map("option_groups")
+}
+
+model OptionGroupOption {
+  id            BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  optionGroupId BigInt      @map("option_group_id") @db.UnsignedBigInt
+  label         String      @db.VarChar(100)
+  sortOrder     Int         @default(0) @map("sort_order") @db.UnsignedTinyInt
+  createdAt     DateTime?   @map("created_at") @db.Timestamp(0)
+  updatedAt     DateTime?   @updatedAt @map("updated_at") @db.Timestamp(0)
+  optionGroup   OptionGroup @relation(fields: [optionGroupId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "option_group_options_option_group_id_foreign")
+
+  @@index([optionGroupId], map: "option_group_options_option_group_id_index")
+  @@index([sortOrder], map: "option_group_options_sort_order_index")
+  @@map("option_group_options")
+}
+
+model RecommendedItem {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  categoryId BigInt    @map("category_id") @db.UnsignedBigInt
+  name       String    @db.VarChar(200)
+  price      Decimal   @db.Decimal(8, 2)
+  image      String    @db.VarChar(500)
+  sortOrder  Int       @default(0) @map("sort_order") @db.UnsignedTinyInt
+  createdAt  DateTime? @map("created_at") @db.Timestamp(0)
+  updatedAt  DateTime? @updatedAt @map("updated_at") @db.Timestamp(0)
+  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "recommended_items_category_id_foreign")
+
+  @@index([categoryId], map: "recommended_items_category_id_index")
+  @@index([sortOrder], map: "recommended_items_sort_order_index")
+  @@map("recommended_items")
+}
+
+model Order {
+  id          BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  tableNumber String?     @map("table_number") @db.VarChar(20)
+  status      OrderStatus @default(pending)
+  note        String?     @db.Text
+  totalPrice  Decimal     @map("total_price") @db.Decimal(10, 2)
+  createdAt   DateTime?   @map("created_at") @db.Timestamp(0)
+  updatedAt   DateTime?   @updatedAt @map("updated_at") @db.Timestamp(0)
+  items       OrderItem[]
+
+  @@index([createdAt], map: "orders_created_at_index")
+  @@index([status], map: "orders_status_index")
+  @@index([tableNumber], map: "orders_table_number_index")
+  @@map("orders")
+}
+
+model OrderItem {
+  id              BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  orderId         BigInt    @map("order_id") @db.UnsignedBigInt
+  productId       BigInt    @map("product_id") @db.UnsignedBigInt
+  productName     String    @map("product_name") @db.VarChar(200)
+  productPrice    Decimal   @map("product_price") @db.Decimal(8, 2)
+  productImage    String    @map("product_image") @db.VarChar(500)
+  selectedOptions String?   @map("selected_options") @db.VarChar(500)
+  qty             Int       @default(1) @db.UnsignedTinyInt
+  lineTotal       Decimal   @map("line_total") @db.Decimal(10, 2)
+  createdAt       DateTime? @map("created_at") @db.Timestamp(0)
+  updatedAt       DateTime? @updatedAt @map("updated_at") @db.Timestamp(0)
+  order           Order     @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "order_items_order_id_foreign")
+  product         Product   @relation(fields: [productId], references: [id], onUpdate: NoAction, map: "order_items_product_id_foreign")
+
+  @@index([orderId], map: "order_items_order_id_index")
+  @@index([productId], map: "order_items_product_id_index")
+  @@map("order_items")
+}
+
+enum OrderStatus {
+  pending
+  confirmed
+  preparing
+  ready
+  completed
+  cancelled
+}
