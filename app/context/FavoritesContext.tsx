@@ -1,6 +1,6 @@
 "use client";
 
-import { OptionGroup, RecommendedItem } from "@/app/data/categoryOptions";
+import { OptionGroup, RecommendedItem } from "@/types/category";
 import { createContext, useContext, useEffect, useState } from "react";
 
 export type FavoriteItem = {

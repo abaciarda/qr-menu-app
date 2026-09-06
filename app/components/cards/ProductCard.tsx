@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { OptionGroup, RecommendedItem } from "@/app/data/categoryOptions";
+import { OptionGroup, RecommendedItem } from "@/types/category";
 import ProductPopup from "./ProductPopup";
 
 type ProductCardProps = {
