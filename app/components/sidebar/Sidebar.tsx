@@ -6,34 +6,17 @@ import { HeartIcon, HomeIcon, MapPinIcon, PhoneIcon, XIcon } from "lucide-react"
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+export interface RestaurantConfigProps {
+  name: string;
+  phone?: string | null;
+  whatsappNumber?: string | null;
+  googleMapsUrl?: string | null;
+  instagramUrl?: string | null;
+}
+
 const navItems = [
   { label: "Homepage", href: "/", icon: HomeIcon },
   { label: "Favorites", href: "/favorites", icon: HeartIcon },
-];
-
-const contactItems = [
-  {
-    label: "Call Us",
-    href: "tel:+901234567890",
-    external: false,
-    icon: <PhoneIcon size={20} strokeWidth={2} className="text-ink-muted" />,
-  },
-  {
-    label: "WhatsApp",
-    href: "https://wa.me/901234567890",
-    external: true,
-    icon: (
-      <svg width={20} height={20} viewBox="0 0 24 24" fill="currentColor" className="text-[#25D366]">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-      </svg>
-    ),
-  },
-  {
-    label: "Get Directions",
-    href: "https://maps.google.com",
-    external: true,
-    icon: <MapPinIcon size={20} strokeWidth={2} className="text-ink-muted" />,
-  },
 ];
 
 const drawerVariants = {
@@ -48,9 +31,44 @@ const drawerVariants = {
   },
 };
 
-export default function Sidebar() {
+export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
   const { isOpen, close } = useSidebar();
   const pathname = usePathname();
+
+  const contactItems = [
+    config?.phone && {
+      label: "Call Us",
+      href: `tel:${config.phone.replace(/\s+/g, "")}`,
+      external: false,
+      icon: <PhoneIcon size={20} strokeWidth={2} className="text-ink-muted" />,
+    },
+    config?.whatsappNumber && {
+      label: "WhatsApp",
+      href: `https://wa.me/${config.whatsappNumber.replace(/\D/g, "")}`,
+      external: true,
+      icon: (
+        <svg width={20} height={20} viewBox="0 0 24 24" fill="currentColor" className="text-[#25D366]">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+        </svg>
+      ),
+    },
+    config?.googleMapsUrl && {
+      label: "Get Directions",
+      href: config.googleMapsUrl,
+      external: true,
+      icon: <MapPinIcon size={20} strokeWidth={2} className="text-ink-muted" />,
+    },
+    config?.instagramUrl && {
+      label: "Instagram",
+      href: config.instagramUrl,
+      external: true,
+      icon: (
+        <svg width={20} height={20} viewBox="0 0 24 24" fill="currentColor" className="text-[#E4405F]">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+        </svg>
+      ),
+    },
+  ].filter(Boolean) as { label: string; href: string; external: boolean; icon: React.ReactNode }[];
 
   return (
     <AnimatePresence>
@@ -77,15 +95,15 @@ export default function Sidebar() {
               <Link
                 href="/"
                 onClick={close}
-                className="uppercase font-extrabold text-lg tracking-tight font-display text-ink"
+                className="uppercase font-extrabold text-lg tracking-tight font-display text-ink truncate mr-2"
               >
-                QR Menu
+                {config?.name || "Atlas Restaurant"}
               </Link>
 
               <button
                 onClick={close}
                 aria-label="Close menu"
-                className="w-10 h-10 flex items-center justify-center bg-surface rounded-full hoverable-btn"
+                className="w-10 h-10 shrink-0 flex items-center justify-center bg-surface rounded-full hoverable-btn"
               >
                 <XIcon size={18} className="text-ink" />
               </button>
@@ -110,28 +128,34 @@ export default function Sidebar() {
               })}
             </nav>
 
-            <div className="h-px bg-line my-4" />
+            {contactItems.length > 0 && (
+              <>
+                <div className="h-px bg-line my-4" />
 
-            <div className="flex flex-col gap-1">
-              <p className="text-xs font-mono text-ink-muted uppercase tracking-widest px-3 mb-1">
-                Contact
-              </p>
+                <div className="flex flex-col gap-1">
+                  <p className="text-xs font-mono text-ink-muted uppercase tracking-widest px-3 mb-1">
+                    Contact
+                  </p>
 
-              {contactItems.map(({ label, href, icon, external }) => (
-                <a
-                  key={label}
-                  href={href}
-                  {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  className="flex items-center gap-3 px-3 py-3 rounded-xl text-ink font-medium hoverable-btn"
-                >
-                  {icon}
-                  {label}
-                </a>
-              ))}
-            </div>
+                  {contactItems.map(({ label, href, icon, external }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      className="flex items-center gap-3 px-3 py-3 rounded-xl text-ink font-medium hoverable-btn"
+                    >
+                      {icon}
+                      {label}
+                    </a>
+                  ))}
+                </div>
+              </>
+            )}
 
             <div className="mt-auto pt-4 border-t border-line">
-              <p className="text-xs text-ink-muted text-center font-mono">QR Menu App 2026</p>
+              <p className="text-xs text-ink-muted text-center font-mono truncate">
+                {config?.name || "QR Menu"} © 2026
+              </p>
             </div>
           </motion.div>
         </motion.aside>

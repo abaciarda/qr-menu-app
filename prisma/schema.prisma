@@ -135,3 +135,22 @@ enum OrderStatus {
   completed
   cancelled
 }
+
+model RestaurantConfig {
+  id               Int       @id @default(1)
+  name             String    @default("QR Menu") @db.VarChar(100)
+  description      String?   @db.VarChar(255)
+  logo             String?   @db.VarChar(500)
+  phone            String?   @db.VarChar(30)
+  whatsappNumber   String?   @map("whatsapp_number") @db.VarChar(30)
+  address          String?   @db.Text
+  googleMapsUrl    String?   @map("google_maps_url") @db.VarChar(500)
+  instagramUrl     String?   @map("instagram_url") @db.VarChar(255)
+  wifiName         String?   @map("wifi_name") @db.VarChar(100)
+  wifiPassword     String?   @map("wifi_password") @db.VarChar(100)
+  currencySymbol   String    @default("₺") @map("currency_symbol") @db.VarChar(10)
+  createdAt        DateTime? @map("created_at") @db.Timestamp(0)
+  updatedAt        DateTime? @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  @@map("restaurant_configs")
+}

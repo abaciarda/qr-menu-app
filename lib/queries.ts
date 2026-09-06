@@ -166,3 +166,58 @@ export const getCategoryBySlug = (slug: string): Promise<CategoryPageDTO | null>
     }
   )();
 };
+
+export const getRestaurantConfig = unstable_cache(
+  async () => {
+    const defaultConfig = {
+      id: 1,
+      name: "Atlas Restaurant & Lounge",
+      description: "Akdeniz ve Ege mutfağının seçkin lezzetleri, artizan kahveler ve imza kokteyller.",
+      logo: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80",
+      phone: "+90 (212) 245 80 90",
+      whatsappNumber: "905321234567",
+      address: "Kemankeş Karamustafa Paşa Mah. Rıhtım Cad. No: 42/A, Karaköy, Beyoğlu / İstanbul",
+      googleMapsUrl: "https://maps.google.com/?q=Karakoy+Istanbul",
+      instagramUrl: "https://instagram.com/atlasrestauranttr",
+      wifiName: "Atlas_Guest_5G",
+      wifiPassword: "AtlasKarakoy2026",
+      currencySymbol: "₺",
+      createdAt: null,
+      updatedAt: null,
+    };
+
+    try {
+      const db = prisma as any;
+      if (!db.restaurantConfig) {
+        return defaultConfig;
+      }
+
+      let config = await db.restaurantConfig.findFirst();
+
+      if (!config) {
+        config = await db.restaurantConfig.create({
+          data: {
+            id: 1,
+            name: defaultConfig.name,
+            description: defaultConfig.description,
+            logo: defaultConfig.logo,
+            phone: defaultConfig.phone,
+            whatsappNumber: defaultConfig.whatsappNumber,
+            address: defaultConfig.address,
+            googleMapsUrl: defaultConfig.googleMapsUrl,
+            instagramUrl: defaultConfig.instagramUrl,
+            wifiName: defaultConfig.wifiName,
+            wifiPassword: defaultConfig.wifiPassword,
+            currencySymbol: defaultConfig.currencySymbol,
+          },
+        }).catch(() => null);
+      }
+
+      return config || defaultConfig;
+    } catch {
+      return defaultConfig;
+    }
+  },
+  ["restaurant-config"],
+  { revalidate: 3600, tags: ["config"] }
+);
