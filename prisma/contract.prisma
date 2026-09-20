@@ -1,0 +1,157 @@
+// use prisma-8
+
+enum OrderStatus {
+  @@type("pg/text@1")
+  pending   = "pending"
+  confirmed = "confirmed"
+  preparing = "preparing"
+  ready     = "ready"
+  completed = "completed"
+  cancelled = "cancelled"
+}
+
+model Category {
+  id        Int          @id @default(autoincrement())
+  name      String
+  slug      String @unique
+  image     String
+  sortOrder Int          @default(0) @map("sort_order")
+  isActive  Boolean      @default(true) @map("is_active")
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt temporal.updatedAt() @map("updated_at")
+
+  optionGroups     OptionGroup[]
+  products         Product[]
+  recommendedItems RecommendedItem[]
+
+  @@index([sortOrder])
+  @@index([isActive])
+  @@map("categories")
+}
+
+model Product {
+  id          Int          @id @default(autoincrement())
+  categoryId  Int          @map("category_id")
+  name        String
+  description String
+  price       Numeric(8, 2)
+  image       String
+  sortOrder   Int          @default(0) @map("sort_order")
+  isAvailable Boolean      @default(true) @map("is_available")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   temporal.updatedAt() @map("updated_at")
+
+  category   Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+
+  @@index([categoryId])
+  @@index([isAvailable])
+  @@index([sortOrder])
+  @@map("products")
+}
+
+model OptionGroup {
+  id         Int          @id @default(autoincrement())
+  categoryId Int          @map("category_id")
+  label      String
+  isRequired Boolean      @default(false) @map("is_required")
+  sortOrder  Int          @default(0) @map("sort_order")
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  temporal.updatedAt() @map("updated_at")
+
+  category Category            @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  options  OptionGroupOption[]
+
+  @@index([categoryId])
+  @@index([sortOrder])
+  @@map("option_groups")
+}
+
+model OptionGroupOption {
+  id            Int          @id @default(autoincrement())
+  optionGroupId Int          @map("option_group_id")
+  label         String
+  sortOrder     Int          @default(0) @map("sort_order")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     temporal.updatedAt() @map("updated_at")
+
+  optionGroup OptionGroup @relation(fields: [optionGroupId], references: [id], onDelete: Cascade)
+
+  @@index([optionGroupId])
+  @@index([sortOrder])
+  @@map("option_group_options")
+}
+
+model RecommendedItem {
+  id         Int           @id @default(autoincrement())
+  categoryId Int           @map("category_id")
+  name       String
+  price      Numeric(8, 2)
+  image      String
+  sortOrder  Int           @default(0) @map("sort_order")
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  temporal.updatedAt() @map("updated_at")
+
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId])
+  @@index([sortOrder])
+  @@map("recommended_items")
+}
+
+model Order {
+  id          Int           @id @default(autoincrement())
+  tableNumber String?  @map("table_number")
+  status      OrderStatus   @default(pending)
+  note        String?
+  totalPrice  Numeric(10, 2) @map("total_price")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   temporal.updatedAt() @map("updated_at")
+
+  items OrderItem[]
+
+  @@index([createdAt])
+  @@index([status])
+  @@index([tableNumber])
+  @@map("orders")
+}
+
+model OrderItem {
+  id              Int           @id @default(autoincrement())
+  orderId         Int           @map("order_id")
+  productId       Int           @map("product_id")
+  productName     String  @map("product_name")
+  productPrice    Numeric(8, 2) @map("product_price")
+  productImage    String  @map("product_image")
+  selectedOptions String? @map("selected_options")
+  qty             Int           @default(1)
+  lineTotal       Numeric(10, 2) @map("line_total")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       temporal.updatedAt() @map("updated_at")
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model RestaurantConfig {
+  id             Int           @id @default(1)
+  name           String  @default("QR Menu")
+  description    String?
+  logo           String?
+  phone          String?
+  whatsappNumber String?  @map("whatsapp_number")
+  address        String?
+  googleMapsUrl  String? @map("google_maps_url")
+  instagramUrl   String? @map("instagram_url")
+  wifiName       String? @map("wifi_name")
+  wifiPassword   String? @map("wifi_password")
+  currencySymbol String   @default("₺") @map("currency_symbol")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      temporal.updatedAt() @map("updated_at")
+
+  @@map("restaurant_configs")
+}

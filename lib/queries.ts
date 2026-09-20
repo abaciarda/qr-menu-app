@@ -1,221 +1,128 @@
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/db";
 import { CategoryPageDTO, SlideCategory } from "@/types/category";
 import { unstable_cache } from "next/cache";
 
 export const getCategories = unstable_cache(
   async (): Promise<SlideCategory[]> => {
-    const categories = await prisma.category.findMany({
-      where: {
-        isActive: true,
-      },
-      orderBy: {
-        sortOrder: "asc",
-      },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        image: true,
-        _count: {
-          select: {
-            products: {
-              where: { isAvailable: true },
-            },
-          },
-        },
-      },
-    });
+    const [categories, counts] = await Promise.all([
+      db.orm.public.Category
+        .where({ isActive: true })
+        .select("id", "name", "slug", "image")
+        .orderBy((c) => c.sortOrder.asc())
+        .all(),
+
+      db.orm.public.Product
+        .where({ isAvailable: true })
+        .groupBy("categoryId")
+        .aggregate((agg) => ({ productCount: agg.count() })),
+    ]);
+
+    const countByCategory = new Map(
+      counts.map((row) => [row.categoryId, row.productCount])
+    );
 
     return categories.map((cat) => ({
-      id: Number(cat.id),
+      id: cat.id,
       name: cat.name,
       slug: cat.slug,
       image: cat.image,
-      productCount: cat._count.products,
+      productCount: countByCategory.get(cat.id) ?? 0,
     }));
   },
   ["categories-list"],
-  {
-    revalidate: 120,
-    tags: ["categories"],
-  }
+  { revalidate: 120, tags: ["categories"] }
 );
 
 export const getCategoryBySlug = (slug: string): Promise<CategoryPageDTO | null> => {
   return unstable_cache(
     async (): Promise<CategoryPageDTO | null> => {
-      const result = await prisma.$queryRaw<Array<{
-        id: bigint | number;
-        name: string;
-        slug: string;
-        image: string;
-        products: string | unknown[];
-        optionGroups: string | unknown[];
-        recommended: string | unknown[];
-      }>>`
-        SELECT 
-          c.id, c.name, c.slug, c.image,
-          (
-            SELECT JSON_ARRAYAGG(
-              JSON_OBJECT(
-                'id', p.id,
-                'name', p.name,
-                'description', p.description,
-                'price', CAST(p.price AS DOUBLE),
-                'image', p.image
-              )
-            )
-            FROM (
-              SELECT id, name, description, price, image 
-              FROM products 
-              WHERE category_id = c.id AND is_available = 1 
-              ORDER BY sort_order ASC
-            ) p
-          ) as products,
-          (
-            SELECT JSON_ARRAYAGG(
-              JSON_OBJECT(
-                'id', og.id,
-                'label', og.label,
-                'required', IF(og.is_required, TRUE, FALSE),
-                'options', (
-                  SELECT JSON_ARRAYAGG(ogo.label)
-                  FROM (
-                    SELECT label FROM option_group_options 
-                    WHERE option_group_id = og.id 
-                    ORDER BY sort_order ASC
-                  ) ogo
-                )
-              )
-            )
-            FROM (
-              SELECT id, label, is_required 
-              FROM option_groups 
-              WHERE category_id = c.id 
-              ORDER BY sort_order ASC
-            ) og
-          ) as optionGroups,
-          (
-            SELECT JSON_ARRAYAGG(
-              JSON_OBJECT(
-                'id', ri.id,
-                'name', ri.name,
-                'price', CAST(ri.price AS DOUBLE),
-                'image', ri.image
-              )
-            )
-            FROM (
-              SELECT id, name, price, image 
-              FROM recommended_items 
-              WHERE category_id = c.id 
-              ORDER BY sort_order ASC
-            ) ri
-          ) as recommended
-        FROM categories c
-        WHERE c.slug = ${slug} AND c.is_active = 1
-        LIMIT 1;
-      `;
+      const category = await db.orm.public.Category
+        .select("id", "name", "slug", "image")
+        .first({ slug, isActive: true });
 
-      if (!result || result.length === 0) return null;
+      if (!category) return null;
 
-      const row = result[0];
-      const parseJson = (val: unknown) => {
-        if (!val) return [];
-        if (typeof val === "string") {
-          try { return JSON.parse(val); } catch { return []; }
-        }
-        return Array.isArray(val) ? val : [];
-      };
-
-      const products = parseJson(row.products).map((p: any) => ({
-        id: Number(p.id),
-        name: String(p.name || ""),
-        description: String(p.description || ""),
-        price: Number(p.price || 0),
-        image: String(p.image || ""),
-      }));
-
-      const optionGroups = parseJson(row.optionGroups).map((g: any) => ({
-        id: Number(g.id),
-        label: String(g.label || ""),
-        required: Boolean(g.required),
-        options: parseJson(g.options).map((o: any) => String(typeof o === "object" ? o.label : o)),
-      }));
-
-      const recommended = parseJson(row.recommended).map((r: any) => ({
-        id: Number(r.id),
-        name: String(r.name || ""),
-        price: Number(r.price || 0),
-        image: String(r.image || ""),
-      }));
+      const [products, optionGroups, recommended] = await Promise.all([
+        db.orm.public.Product
+          .where({ categoryId: category.id, isAvailable: true })
+          .select("id", "name", "description", "price", "image")
+          .orderBy((p) => p.sortOrder.asc())
+          .all(),
+        db.orm.public.OptionGroup
+          .where({ categoryId: category.id })
+          .include("options", (o) => o.orderBy((x) => x.sortOrder.asc()))
+          .orderBy((g) => g.sortOrder.asc())
+          .all(),
+        db.orm.public.RecommendedItem
+          .where({ categoryId: category.id })
+          .select("id", "name", "price", "image")
+          .orderBy((r) => r.sortOrder.asc())
+          .all(),
+      ]);
 
       return {
-        id: Number(row.id),
-        name: row.name,
-        slug: row.slug,
-        image: row.image,
-        products,
-        optionGroups,
-        recommended,
+        id: category.id,
+        name: category.name,
+        slug: category.slug,
+        image: category.image,
+        products: products.map((p) => ({
+          id: p.id,
+          name: p.name,
+          description: p.description,
+          price: Number(p.price),
+          image: p.image,
+        })),
+        optionGroups: optionGroups.map((g) => ({
+          id: g.id,
+          label: g.label,
+          required: g.isRequired,
+          options: g.options.map((o) => o.label),
+        })),
+        recommended: recommended.map((r) => ({
+          id: r.id,
+          name: r.name,
+          price: Number(r.price),
+          image: r.image,
+        })),
       };
     },
     [`category-${slug}`],
-    {
-      revalidate: 120,
-      tags: ["categories", `category-${slug}`],
-    }
+    { revalidate: 120, tags: ["categories", `category-${slug}`] }
   )();
+};
+
+const DEFAULT_CONFIG = {
+  id: 1,
+  name: "Atlas Restaurant & Lounge",
+  description: "Akdeniz ve Ege mutfağının seçkin lezzetleri, artizan kahveler ve imza kokteyller.",
+  logo: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80",
+  phone: "+90 (212) 245 80 90",
+  whatsappNumber: "905321234567",
+  address: "Kemankeş Karamustafa Paşa Mah. Rıhtım Cad. No: 42/A, Karaköy, Beyoğlu / İstanbul",
+  googleMapsUrl: "https://maps.google.com/?q=Karakoy+Istanbul",
+  instagramUrl: "https://instagram.com/atlasrestauranttr",
+  wifiName: "Atlas_Guest_5G",
+  wifiPassword: "AtlasKarakoy2026",
+  currencySymbol: "₺",
 };
 
 export const getRestaurantConfig = unstable_cache(
   async () => {
-    const defaultConfig = {
-      id: 1,
-      name: "Atlas Restaurant & Lounge",
-      description: "Akdeniz ve Ege mutfağının seçkin lezzetleri, artizan kahveler ve imza kokteyller.",
-      logo: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80",
-      phone: "+90 (212) 245 80 90",
-      whatsappNumber: "905321234567",
-      address: "Kemankeş Karamustafa Paşa Mah. Rıhtım Cad. No: 42/A, Karaköy, Beyoğlu / İstanbul",
-      googleMapsUrl: "https://maps.google.com/?q=Karakoy+Istanbul",
-      instagramUrl: "https://instagram.com/atlasrestauranttr",
-      wifiName: "Atlas_Guest_5G",
-      wifiPassword: "AtlasKarakoy2026",
-      currencySymbol: "₺",
-      createdAt: null,
-      updatedAt: null,
-    };
-
     try {
-      const db = prisma as any;
-      if (!db.restaurantConfig) {
-        return defaultConfig;
-      }
+      const config = await db.orm.public.RestaurantConfig
+        .select(
+          "id", "name", "description", "logo", "phone", "whatsappNumber",
+          "address", "googleMapsUrl", "instagramUrl", "wifiName",
+          "wifiPassword", "currencySymbol"
+        )
+        .first({ id: 1 });
 
-      let config = await db.restaurantConfig.findFirst();
+      if (config) return config;
 
-      if (!config) {
-        config = await db.restaurantConfig.create({
-          data: {
-            id: 1,
-            name: defaultConfig.name,
-            description: defaultConfig.description,
-            logo: defaultConfig.logo,
-            phone: defaultConfig.phone,
-            whatsappNumber: defaultConfig.whatsappNumber,
-            address: defaultConfig.address,
-            googleMapsUrl: defaultConfig.googleMapsUrl,
-            instagramUrl: defaultConfig.instagramUrl,
-            wifiName: defaultConfig.wifiName,
-            wifiPassword: defaultConfig.wifiPassword,
-            currencySymbol: defaultConfig.currencySymbol,
-          },
-        }).catch(() => null);
-      }
-
-      return config || defaultConfig;
+      await db.orm.public.RestaurantConfig.create(DEFAULT_CONFIG).catch(() => null);
+      return DEFAULT_CONFIG;
     } catch {
-      return defaultConfig;
+      return DEFAULT_CONFIG;
     }
   },
   ["restaurant-config"],
