@@ -10,12 +10,12 @@ export default function Navigation() {
   const { openCart, totalItems } = useCart();
 
   return (
-    <nav className="sticky z-10 bg-background top-0 border-b border-line">
+    <nav className="sticky z-10 bg-ui-background top-0 border-b border-ui-line">
       <div className="max-w-7xl w-full mx-auto flex items-center justify-between px-5 py-3">
         <button
           onClick={open}
           aria-label="Open menu"
-          className="w-10 h-10 flex items-center justify-center bg-surface rounded-full hoverable-btn"
+          className="w-10 h-10 flex items-center justify-center bg-ui-surface rounded-full hoverable-btn"
         >
           <MenuIcon strokeWidth={2} />
         </button>
@@ -27,11 +27,11 @@ export default function Navigation() {
         <button
           onClick={openCart}
           aria-label="Open cart"
-          className="relative flex items-center justify-center w-10 h-10 bg-surface rounded-full hoverable-btn"
+          className="relative flex items-center justify-center w-10 h-10 bg-ui-surface rounded-full hoverable-btn"
         >
           <ShoppingCartIcon size={20} />
           {totalItems > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-accent text-white text-[10px] font-mono font-bold rounded-full flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-ui-accent text-white text-[10px] font-mono font-bold rounded-full flex items-center justify-center">
               {totalItems > 99 ? "99+" : totalItems}
             </span>
           )}

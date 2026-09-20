@@ -14,20 +14,20 @@ export default function FavoritesPage() {
       <div className="font-sans">
         <section className="flex flex-col gap-5 px-5 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="font-display font-bold text-xl text-ink">Favorites</h1>
-            <div className="h-4 w-12 rounded bg-surface-hover animate-pulse" />
+            <h1 className="font-display font-bold text-xl text-ui-ink">Favorites</h1>
+            <div className="h-4 w-12 rounded bg-ui-surface-hover animate-pulse" />
           </div>
           <ContentAnimation>
             {Array.from({ length: 3 }, (_, index) => (
-              <div key={index} className="animate-pulse flex gap-4 bg-surface px-4 py-4 rounded-2xl">
+              <div key={index} className="animate-pulse flex gap-4 bg-ui-surface px-4 py-4 rounded-2xl">
                 <div className="flex flex-col min-w-0 flex-1 justify-center gap-1">
-                  <div className="h-5 rounded bg-surface-hover w-2/3" />
-                  <div className="h-4 rounded bg-surface-hover w-full" />
-                  <div className="h-4 rounded bg-surface-hover w-5/6" />
-                  <div className="h-4 rounded bg-surface-hover w-12 mt-1" />
+                  <div className="h-5 rounded bg-ui-surface-hover w-2/3" />
+                  <div className="h-4 rounded bg-ui-surface-hover w-full" />
+                  <div className="h-4 rounded bg-ui-surface-hover w-5/6" />
+                  <div className="h-4 rounded bg-ui-surface-hover w-12 mt-1" />
                 </div>
 
-                <div className="size-24 shrink-0 rounded-xl bg-surface-hover" />
+                <div className="size-24 shrink-0 rounded-xl bg-ui-surface-hover" />
               </div>
             ))}
           </ContentAnimation>
@@ -38,9 +38,9 @@ export default function FavoritesPage() {
 
   if (favorites.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 min-h-[60vh] text-ink-muted font-sans px-5">
+      <div className="flex flex-col items-center justify-center gap-4 min-h-[60vh] text-ui-ink-muted font-sans px-5">
         <HeartIcon size={48} strokeWidth={1.5} />
-        <h1 className="font-display font-bold text-2xl text-ink">Favorites</h1>
+        <h1 className="font-display font-bold text-2xl text-ui-ink">Favorites</h1>
         <p className="text-sm text-center leading-relaxed max-w-xs">
           Tap the heart on any product to save it here for easy reference.
         </p>

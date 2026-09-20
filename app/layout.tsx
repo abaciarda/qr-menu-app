@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, Geist, Geist_Mono } from "next/font/google";
-import CartSheet from "./components/cart/CartSheet";
-import Footer from "./components/Footer";
-import Navigation from "./components/navigation/Navigation";
-import Sidebar from "./components/sidebar/Sidebar";
-import { CartProvider } from "./context/CartContext";
-import { FavoritesProvider } from "./context/FavoritesContext";
-import { SidebarProvider } from "./context/SidebarContext";
 import "./globals.css";
-import { getRestaurantConfig } from "@/lib/queries";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -88,24 +80,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const config = await getRestaurantConfig();
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} h-full antialiased`}>
-      <body className="bg-background text-ink min-h-screen flex flex-col">
-        <SidebarProvider>
-          <CartProvider>
-            <FavoritesProvider>
-              <Navigation />
-              <Sidebar config={ config } />
-              <CartSheet />
-              <div className="flex-1 font-sans">
-                {children}
-              </div>
-              <Footer />
-            </FavoritesProvider>
-          </CartProvider>
-        </SidebarProvider>
+      <body className="bg-ui-background text-ui-ink min-h-screen flex flex-col">
+        {children}
       </body>
     </html>
   );

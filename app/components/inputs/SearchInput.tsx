@@ -10,12 +10,12 @@ export default function SearchInput({
       <SearchIcon
         size={18}
         strokeWidth={2}
-        className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none"
+        className="absolute left-4 top-1/2 -translate-y-1/2 text-ui-ink-muted pointer-events-none"
       />
       <input
         type="text"
         placeholder={placeholder}
-        className="w-full h-12 bg-surface rounded-full pl-11 pr-4 text-sm text-ink placeholder:text-ink-muted outline-none border border-transparent focus:bg-surface-raised focus:border-line focus:shadow-sm transition-colors"
+        className="w-full h-12 bg-ui-surface rounded-full pl-11 pr-4 text-sm text-ui-ink placeholder:text-ui-ink-muted outline-none border border-transparent focus:bg-ui-surface-raised focus:border-ui-line focus:shadow-sm transition-colors"
       />
     </div>
   );

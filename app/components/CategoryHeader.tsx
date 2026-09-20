@@ -7,8 +7,8 @@ interface CategoryHeaderProps {
 export default function CategoryHeader({ title, count, unit = "Products" }: CategoryHeaderProps) {
   return (
     <div className="flex items-center justify-between">
-      <h1 className="font-display font-bold text-xl text-ink">{title}</h1>
-      <p className="text-sm text-ink-muted">
+      <h1 className="font-display font-bold text-xl text-ui-ink">{title}</h1>
+      <p className="text-sm text-ui-ink-muted">
         {count} {unit}
       </p>
     </div>

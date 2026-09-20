@@ -40,7 +40,7 @@ export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
       label: "Call Us",
       href: `tel:${config.phone.replace(/\s+/g, "")}`,
       external: false,
-      icon: <PhoneIcon size={20} strokeWidth={2} className="text-ink-muted" />,
+      icon: <PhoneIcon size={20} strokeWidth={2} className="text-ui-ink-muted" />,
     },
     config?.whatsappNumber && {
       label: "WhatsApp",
@@ -56,7 +56,7 @@ export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
       label: "Get Directions",
       href: config.googleMapsUrl,
       external: true,
-      icon: <MapPinIcon size={20} strokeWidth={2} className="text-ink-muted" />,
+      icon: <MapPinIcon size={20} strokeWidth={2} className="text-ui-ink-muted" />,
     },
     config?.instagramUrl && {
       label: "Instagram",
@@ -75,7 +75,7 @@ export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
       {isOpen && (
         <motion.aside
           key="sidebar-backdrop"
-          className="fixed inset-0 bg-ink/30 backdrop-blur-sm z-50 font-sans"
+          className="fixed inset-0 bg-ui-ink/30 backdrop-blur-sm z-50 font-sans"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -85,7 +85,7 @@ export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
           }}
         >
           <motion.div
-            className="flex flex-col max-w-72 w-full bg-background h-full shadow-xl px-5 py-4"
+            className="flex flex-col max-w-72 w-full bg-ui-background h-full shadow-xl px-5 py-4"
             variants={drawerVariants}
             initial="hidden"
             animate="visible"
@@ -95,7 +95,7 @@ export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
               <Link
                 href="/"
                 onClick={close}
-                className="uppercase font-extrabold text-lg tracking-tight font-display text-ink truncate mr-2"
+                className="uppercase font-extrabold text-lg tracking-tight font-display text-ui-ink truncate mr-2"
               >
                 {config?.name || "Atlas Restaurant"}
               </Link>
@@ -103,9 +103,9 @@ export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
               <button
                 onClick={close}
                 aria-label="Close menu"
-                className="w-10 h-10 shrink-0 flex items-center justify-center bg-surface rounded-full hoverable-btn"
+                className="w-10 h-10 shrink-0 flex items-center justify-center bg-ui-surface rounded-full hoverable-btn"
               >
-                <XIcon size={18} className="text-ink" />
+                <XIcon size={18} className="text-ui-ink" />
               </button>
             </div>
 
@@ -118,7 +118,7 @@ export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
                     href={href}
                     onClick={close}
                     className={`flex items-center gap-3 px-3 py-3 rounded-xl font-medium transition-colors ${
-                      active ? "bg-ink text-background" : "text-ink hoverable-btn"
+                      active ? "bg-ui-ink text-ui-background" : "text-ui-ink hoverable-btn"
                     }`}
                   >
                     <Icon size={20} strokeWidth={2} />
@@ -130,10 +130,10 @@ export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
 
             {contactItems.length > 0 && (
               <>
-                <div className="h-px bg-line my-4" />
+                <div className="h-px bg-ui-line my-4" />
 
                 <div className="flex flex-col gap-1">
-                  <p className="text-xs font-mono text-ink-muted uppercase tracking-widest px-3 mb-1">
+                  <p className="text-xs font-mono text-ui-ink-muted uppercase tracking-widest px-3 mb-1">
                     Contact
                   </p>
 
@@ -142,7 +142,7 @@ export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
                       key={label}
                       href={href}
                       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                      className="flex items-center gap-3 px-3 py-3 rounded-xl text-ink font-medium hoverable-btn"
+                      className="flex items-center gap-3 px-3 py-3 rounded-xl text-ui-ink font-medium hoverable-btn"
                     >
                       {icon}
                       {label}
@@ -152,8 +152,8 @@ export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
               </>
             )}
 
-            <div className="mt-auto pt-4 border-t border-line">
-              <p className="text-xs text-ink-muted text-center font-mono truncate">
+            <div className="mt-auto pt-4 border-t border-ui-line">
+              <p className="text-xs text-ui-ink-muted text-center font-mono truncate">
                 {config?.name || "QR Menu"} © 2026
               </p>
             </div>

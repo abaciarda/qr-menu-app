@@ -1,5 +1,5 @@
 import { getCategories, getRestaurantConfig } from "@/lib/queries";
-import CategoryCard from "./components/cards/CategoryCard";
+import CategoryCard from "@/app/components/cards/CategoryCard";
 import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -46,7 +46,7 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="bg-surface px-5 py-3 text-center text-ink-muted tracking-wide border-b border-line text-sm">
+      <div className="bg-ui-surface px-5 py-3 text-center text-ui-ink-muted tracking-wide border-b border-ui-line text-sm">
         Browse the menu and tell your waiter what you'd like.
       </div>
 

@@ -1,7 +1,7 @@
 import { getCategoryBySlug, getRestaurantConfig } from "@/lib/queries";
 import { ProductDTO } from "@/types/category";
 import { notFound } from "next/navigation";
-import CategoryPageView from "../components/CategoryPageView";
+import CategoryPageView from "@/app/components/CategoryPageView";
 import type { Metadata } from "next";
 
 interface Props {

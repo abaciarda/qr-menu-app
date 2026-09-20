@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function CategoryCard({id, name, image, slug, productCount } : SlideCategory) {
     return (
-        <Link href={`/${slug}`} className="bg-surface h-36 rounded-2xl relative overflow-hidden shadow-lg shadow-ink/10">
+        <Link href={`/${slug}`} className="bg-ui-surface h-36 rounded-2xl relative overflow-hidden shadow-lg shadow-ui-ink/10">
             <Image
                 src={ image }
                 fill

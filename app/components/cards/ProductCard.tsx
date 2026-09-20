@@ -35,17 +35,17 @@ export default function ProductCard({
 
       <div
         onClick={() => setOpen(true)}
-        className="flex gap-4 bg-surface px-4 py-4 rounded-2xl cursor-pointer hoverable-btn"
+        className="flex gap-4 bg-ui-surface px-4 py-4 rounded-2xl cursor-pointer hoverable-btn"
       >
         <div className="flex flex-col min-w-0 flex-1 justify-center gap-1">
-          <p className="font-display font-semibold text-ink truncate">{name}</p>
-          <p className="text-ink-muted text-sm line-clamp-2">{description}</p>
-          <p className="font-mono text-ink font-semibold text-sm mt-1">
+          <p className="font-display font-semibold text-ui-ink truncate">{name}</p>
+          <p className="text-ui-ink-muted text-sm line-clamp-2">{description}</p>
+          <p className="font-mono text-ui-ink font-semibold text-sm mt-1">
             ${price.toFixed(2)}
           </p>
         </div>
 
-        <div className="size-24 shrink-0 relative rounded-xl overflow-hidden bg-surface">
+        <div className="size-24 shrink-0 relative rounded-xl overflow-hidden bg-ui-surface">
           <Image
             src={image}
             alt={name}

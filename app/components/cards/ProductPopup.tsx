@@ -36,11 +36,11 @@ function OptionPicker({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="bg-surface rounded-xl px-4 py-3 flex flex-col gap-2.5">
+    <div className="bg-ui-surface rounded-xl px-4 py-3 flex flex-col gap-2.5">
       <div className="flex items-center gap-2">
-        <span className="text-sm text-ink font-medium">{label}</span>
+        <span className="text-sm text-ui-ink font-medium">{label}</span>
         {required && (
-          <span className="text-[10px] font-mono text-accent">REQUIRED</span>
+          <span className="text-[10px] font-mono text-ui-accent">REQUIRED</span>
         )}
       </div>
       <div className="flex flex-wrap gap-2">
@@ -50,8 +50,8 @@ function OptionPicker({
             onClick={() => onChange(opt)}
             className={`text-sm font-medium px-3.5 py-1.5 rounded-full border transition-colors ${
               value === opt
-                ? "bg-ink text-background border-ink"
-                : "bg-background text-ink border-line hoverable-btn"
+                ? "bg-ui-ink text-ui-background border-ui-ink"
+                : "bg-ui-background text-ui-ink border-ui-line hoverable-btn"
             }`}
           >
             {opt}
@@ -85,7 +85,7 @@ export default function ProductPopup({ name, description, price, image, optionGr
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 bg-ink/40 backdrop-blur-sm z-50 flex items-end justify-center font-sans"
+          className="fixed inset-0 bg-ui-ink/40 backdrop-blur-sm z-50 flex items-end justify-center font-sans"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -95,7 +95,7 @@ export default function ProductPopup({ name, description, price, image, optionGr
           }}
         >
           <motion.div
-            className="w-full max-w-md max-h-[87vh] bg-background rounded-t-2xl overflow-hidden flex flex-col relative"
+            className="w-full max-w-md max-h-[87vh] bg-ui-background rounded-t-2xl overflow-hidden flex flex-col relative"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
@@ -112,7 +112,7 @@ export default function ProductPopup({ name, description, price, image, optionGr
           >
             <div className="absolute top-2.5 left-1/2 -translate-x-1/2 z-20 w-12 h-1.5 rounded-full bg-white/60 backdrop-blur-md shadow-sm pointer-events-none" />
 
-            <div className="h-64 relative shrink-0 bg-surface">
+            <div className="h-64 relative shrink-0 bg-ui-surface">
               <Image
                 src={image}
                 alt={name}
@@ -138,23 +138,23 @@ export default function ProductPopup({ name, description, price, image, optionGr
               >
                 <HeartIcon
                   size={18}
-                  className={favorited ? "text-accent fill-accent" : "text-white"}
+                  className={favorited ? "text-ui-accent fill-ui-accent" : "text-white"}
                 />
               </button>
             </div>
 
             <div className="overflow-y-auto flex-1">
               <div className="px-5 pt-5 pb-6">
-                <div className="w-10 h-1 rounded-full bg-line mx-auto mb-5" />
+                <div className="w-10 h-1 rounded-full bg-ui-line mx-auto mb-5" />
 
                 <div className="flex items-start justify-between gap-4">
-                  <h2 className="font-display font-bold text-2xl text-ink">{name}</h2>
-                  <span className="font-mono text-ink font-semibold text-lg shrink-0">
+                  <h2 className="font-display font-bold text-2xl text-ui-ink">{name}</h2>
+                  <span className="font-mono text-ui-ink font-semibold text-lg shrink-0">
                     ${(price * qty).toFixed(2)}
                   </span>
                 </div>
 
-                <p className="text-ink-muted text-sm mt-2 leading-relaxed">{description}</p>
+                <p className="text-ui-ink-muted text-sm mt-2 leading-relaxed">{description}</p>
 
                 {optionGroups.length > 0 && (
                   <div className="flex flex-col gap-2 mt-5">
@@ -173,16 +173,16 @@ export default function ProductPopup({ name, description, price, image, optionGr
 
                 {recommended.length > 0 && (
                   <div className="mt-6">
-                    <h3 className="font-display font-semibold text-base text-ink mb-3">Goes well with</h3>
+                    <h3 className="font-display font-semibold text-base text-ui-ink mb-3">Goes well with</h3>
                     <div className="story-track flex gap-3 overflow-x-auto pb-1">
                       {recommended.map((item) => (
-                        <div key={item.name} className="shrink-0 w-32 bg-surface rounded-xl overflow-hidden">
+                        <div key={item.name} className="shrink-0 w-32 bg-ui-surface rounded-xl overflow-hidden">
                           <div className="h-20 relative">
                             <Image src={item.image} alt={item.name} fill sizes="128px" className="object-cover" />
                           </div>
                           <div className="px-2.5 py-2">
-                            <p className="text-xs text-ink font-medium truncate">{item.name}</p>
-                            <p className="text-xs font-mono text-ink-muted mt-0.5">${item.price.toFixed(2)}</p>
+                            <p className="text-xs text-ui-ink font-medium truncate">{item.name}</p>
+                            <p className="text-xs font-mono text-ui-ink-muted mt-0.5">${item.price.toFixed(2)}</p>
                           </div>
                         </div>
                       ))}
@@ -192,18 +192,18 @@ export default function ProductPopup({ name, description, price, image, optionGr
               </div>
             </div>
 
-            <div className="shrink-0 border-t border-line px-5 py-4 flex items-center gap-3 bg-background">
-              <div className="flex items-center gap-3 bg-surface rounded-full px-3 py-2">
+            <div className="shrink-0 border-t border-ui-line px-5 py-4 flex items-center gap-3 bg-ui-background">
+              <div className="flex items-center gap-3 bg-ui-surface rounded-full px-3 py-2">
                 <button
                   onClick={() => setQty((q) => Math.max(1, q - 1))}
-                  className="text-ink hoverable-btn rounded-full"
+                  className="text-ui-ink hoverable-btn rounded-full"
                 >
                   <MinusIcon size={16} />
                 </button>
-                <span className="font-mono text-sm text-ink w-4 text-center">{qty}</span>
+                <span className="font-mono text-sm text-ui-ink w-4 text-center">{qty}</span>
                 <button
                   onClick={() => setQty((q) => q + 1)}
-                  className="text-ink hoverable-btn rounded-full"
+                  className="text-ui-ink hoverable-btn rounded-full"
                 >
                   <PlusIcon size={16} />
                 </button>
@@ -215,7 +215,7 @@ export default function ProductPopup({ name, description, price, image, optionGr
                   onClose();
                   openCart();
                 }}
-                className="flex-1 bg-accent text-white font-medium rounded-full py-3"
+                className="flex-1 bg-ui-accent text-white font-medium rounded-full py-3"
               >
                 Add to order — ${(price * qty).toFixed(2)}
               </button>
