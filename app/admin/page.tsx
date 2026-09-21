@@ -8,25 +8,39 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
+import { loginSchema, LoginInput } from "@/lib/validations/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginAction } from "./actions";
+import { useForm } from "react-hook-form";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [serverError, setServerError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    }
+  });
 
-    setTimeout(() => {
-      setLoading(false);
-      router.push("/admin/dashboard");
-    }, 500);
-  };
+  const onSubmit = async (data: LoginInput) => {
+    setServerError(null);
+
+    const result = await loginAction(data);
+    console.log(data)
+
+    if(!result.success) {
+      setServerError(result.error || "Authentication Failed");
+      console.log(result)
+      return;
+    }
+
+    router.push("/admin/dashboard");
+    router.refresh();
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-10 bg-background text-foreground font-sans">
@@ -44,10 +58,10 @@ export default function AdminLoginPage() {
         </div>
 
         <Card className="rounded-2xl border bg-card p-6 shadow-xl space-y-4">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {serverError && (
               <div className="p-3 text-xs rounded-xl bg-destructive/10 text-destructive border border-destructive/20 font-medium">
-                {error}
+                {serverError}
               </div>
             )}
 
@@ -57,11 +71,15 @@ export default function AdminLoginPage() {
                 id="username"
                 type="text"
                 placeholder="admin"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                { ...register("username") }
                 required
                 className="h-11 rounded-xl"
               />
+              {errors.username && (
+                <p className="text-xs text-destructive font-medium">
+                  {errors.username.message}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -73,8 +91,7 @@ export default function AdminLoginPage() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  { ...register("password") }
                   required
                   className="h-11 rounded-xl pr-10"
                 />
@@ -90,14 +107,19 @@ export default function AdminLoginPage() {
                   )}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-xs text-destructive font-medium">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             <Button
               type="submit"
-              disabled={loading}
+              disabled={isSubmitting}
               className="w-full h-11 rounded-xl font-medium transition-all"
             >
-              {loading ? (
+              {isSubmitting ? (
                 "Authenticating..."
               ) : (
                 <span className="flex items-center justify-center gap-2">
