@@ -37,7 +37,7 @@ export async function getDashboardStats() {
             categoryId: p.categoryId,
             price: Number(p.price),
             image: p.image,
-            createdAt: p.createdAt,
+            createdAt: new Date(p.createdAt.epochMilliseconds),
         })),
     };
 }

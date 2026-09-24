@@ -4,7 +4,7 @@ import { unstable_cache } from "next/cache";
 
 export const getCategories = unstable_cache(
   async (): Promise<SlideCategory[]> => {
-    const [categories, counts] = await Promise.all([
+    const [categories, products] = await Promise.all([
       db.orm.public.Category
         .where({ isActive: true })
         .select("id", "name", "slug", "image")
@@ -13,13 +13,14 @@ export const getCategories = unstable_cache(
 
       db.orm.public.Product
         .where({ isAvailable: true })
-        .groupBy("categoryId")
-        .aggregate((agg) => ({ productCount: agg.count() })),
+        .select("categoryId")
+        .all(),
     ]);
 
-    const countByCategory = new Map(
-      counts.map((row) => [row.categoryId, row.productCount])
-    );
+    const countByCategory = new Map<number, number>();
+    products.forEach((product) => {
+      countByCategory.set(product.categoryId, (countByCategory.get(product.categoryId) ?? 0) + 1);
+    });
 
     return categories.map((cat) => ({
       id: cat.id,
@@ -128,3 +129,7 @@ export const getRestaurantConfig = unstable_cache(
   ["restaurant-config"],
   { revalidate: 3600, tags: ["config"] }
 );
+
+export * from "./queries/dashboard";
+export * from "./queries/categories";
+export * from "./queries/product";
