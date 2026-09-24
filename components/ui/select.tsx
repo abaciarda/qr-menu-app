@@ -47,7 +47,7 @@ export function Select({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full h-11 px-3 py-2 text-sm rounded-xl border bg-background text-foreground flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 transition-colors"
+        className="w-full h-11 px-3 py-2 text-sm rounded-xl border bg-transparent text-foreground flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 transition-colors"
       >
         <span className="truncate font-medium">
           {selectedOption ? selectedOption.label : placeholder}

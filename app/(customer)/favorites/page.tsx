@@ -50,22 +50,20 @@ export default function FavoritesPage() {
 
   return (
     <div className="font-sans">
-      <section className="flex flex-col gap-5 px-5 py-4">
+      <section className="flex flex-col gap-5 px-5 py-4 max-w-7xl w-full mx-auto">
         <CategoryHeader title="Favorites" count={favorites.length} unit="saved" />
         <ContentAnimation>
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {favorites.map((item) => (
-              <ProductCard
-                key={item.name}
-                name={item.name}
-                description={item.description}
-                price={item.price}
-                image={item.image}
-                optionGroups={item.optionGroups}
-                recommended={item.recommended}
-              />
-            ))}
-          </div>
+          {favorites.map((item) => (
+            <ProductCard
+              key={item.name}
+              name={item.name}
+              description={item.description}
+              price={item.price}
+              image={item.image}
+              optionGroups={item.optionGroups}
+              recommended={item.recommended}
+            />
+          ))}
         </ContentAnimation>
       </section>
     </div>
