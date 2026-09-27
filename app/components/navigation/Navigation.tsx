@@ -26,7 +26,7 @@ export default function Navigation() {
         </Link>
 
         <div className="flex items-center gap-2">
-          <LanguageToggle variant="ghost" showLabel={false} className="size-10 p-0 rounded-full bg-ui-surface flex items-center justify-center border-0" />
+          <LanguageToggle variant="ghost" showLabel={false} className="size-10 p-0 rounded-full bg-ui-surface flex items-center justify-center border-0 overflow-hidden relative hoverable-btn" />
           
           <button
             onClick={openCart}

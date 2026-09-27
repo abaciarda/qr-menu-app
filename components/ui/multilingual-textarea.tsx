@@ -5,6 +5,13 @@ import { Label } from '@/components/ui/label';
 import { parseMultilingualValue, formatMultilingualValue } from '@/lib/i18n/localized-text';
 import { SUPPORTED_LANGUAGES, SupportedLanguage } from '@/lib/i18n/types';
 import { useLanguage } from '@/lib/i18n/context';
+import { TR, GB, DE } from 'country-flag-icons/react/3x2';
+
+const FLAG_COMPONENTS = {
+  TR,
+  GB,
+  DE,
+};
 
 interface MultilingualTextareaProps {
   id?: string;
@@ -65,6 +72,7 @@ export function MultilingualTextarea({
         {SUPPORTED_LANGUAGES.map((lang) => {
           const isActive = activeTab === lang.code;
           const hasValue = !!values[lang.code]?.trim();
+          const FlagComp = FLAG_COMPONENTS[lang.countryCode];
 
           return (
             <button
@@ -77,7 +85,7 @@ export function MultilingualTextarea({
                   : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
               }`}
             >
-              <span>{lang.flag}</span>
+              <FlagComp className="w-4 h-3 rounded-2xs object-cover" />
               <span>{lang.code.toUpperCase()}</span>
               {hasValue && (
                 <span className="w-1.5 h-1.5 rounded-full bg-primary inline-block ml-0.5" />
