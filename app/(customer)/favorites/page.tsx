@@ -4,17 +4,19 @@ import CategoryHeader from "@/app/components/CategoryHeader";
 import ProductCard from "@/app/components/cards/ProductCard";
 import ContentAnimation from "@/app/components/ContentAnimation";
 import { useFavorites } from "@/app/context/FavoritesContext";
+import { useLanguage } from "@/lib/i18n/context";
 import { HeartIcon } from "lucide-react";
 
 export default function FavoritesPage() {
   const { favorites, isLoaded } = useFavorites();
+  const { t } = useLanguage();
 
   if (!isLoaded) {
     return (
       <div className="font-sans">
         <section className="flex flex-col gap-5 px-5 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="font-display font-bold text-xl text-ui-ink">Favorites</h1>
+            <h1 className="font-display font-bold text-xl text-ui-ink">{t("customer.favorites", "Favorites")}</h1>
             <div className="h-4 w-12 rounded bg-ui-surface-hover animate-pulse" />
           </div>
           <ContentAnimation>
@@ -40,7 +42,7 @@ export default function FavoritesPage() {
     return (
       <div className="flex flex-col items-center justify-center gap-4 min-h-[60vh] text-ui-ink-muted font-sans px-5">
         <HeartIcon size={48} strokeWidth={1.5} />
-        <h1 className="font-display font-bold text-2xl text-ui-ink">Favorites</h1>
+        <h1 className="font-display font-bold text-2xl text-ui-ink">{t("customer.favorites", "Favorites")}</h1>
         <p className="text-sm text-center leading-relaxed max-w-xs">
           Tap the heart on any product to save it here for easy reference.
         </p>
@@ -51,7 +53,7 @@ export default function FavoritesPage() {
   return (
     <div className="font-sans">
       <section className="flex flex-col gap-5 px-5 py-4 max-w-7xl w-full mx-auto">
-        <CategoryHeader title="Favorites" count={favorites.length} unit="saved" />
+        <CategoryHeader title={t("customer.favorites", "Favorites")} count={favorites.length} unit="saved" />
         <ContentAnimation>
           {favorites.map((item) => (
             <ProductCard

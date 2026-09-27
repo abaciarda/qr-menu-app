@@ -23,6 +23,7 @@ import {
     Utensils,
     Wifi,
 } from "lucide-react";
+import { useLanguage } from "@/lib/i18n/context";
 
 type DashboardStats = {
     totalProducts: number;
@@ -82,10 +83,14 @@ export default function DashboardContent({
     config: RestaurantConfig;
     categoryMap: CategoryMap;
 }) {
+    const { t, getLocalized } = useLanguage();
     const { totalProducts, totalCategories, inStockCount, outOfStockCount, outOfStockProducts } = stats;
     const stockPercentage = totalProducts > 0 ? Math.round((inStockCount / totalProducts) * 100) : 0;
 
-    const getCategoryName = (categoryId: number) => categoryMap.get(categoryId) ?? "Unknown";
+    const getCategoryName = (categoryId: number) => {
+        const rawName = categoryMap.get(categoryId) ?? "Unknown";
+        return getLocalized(rawName);
+    };
 
     return (
         <div className="space-y-6">
@@ -93,24 +98,24 @@ export default function DashboardContent({
                 <div>
                     <div className="flex items-center gap-2">
                         <h1 className="text-2xl font-bold tracking-tight font-heading">
-                            {config?.name || "Atlas Restaurant & Lounge"}
+                            {getLocalized(config?.name) || "QR Menu Restaurant"}
                         </h1>
                         <Badge variant="outline" className="text-xs">
                             Live QR Menu
                         </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground mt-1">
-                        Menu catalog overview, product stock availability, and store identity
+                        {t("dashboard.subtitle", "View overall performance, metrics, and orders for your restaurant.")}
                     </p>
                 </div>
 
                 <div className="flex items-center gap-2">
                     <Button render={<Link href="/" target="_blank" />} variant="outline" className="rounded-xl">
-                        <ExternalLink className="h-4 w-4 mr-1.5" /> View Public QR Menu
+                        <ExternalLink className="h-4 w-4 mr-1.5" /> {t("common.view", "View Public QR Menu")}
                     </Button>
 
                     <Button render={<Link href="/admin/products/new" />} className="rounded-xl">
-                        <Plus className="h-4 w-4 mr-1.5" /> Add New Product
+                        <Plus className="h-4 w-4 mr-1.5" /> {t("products.addProduct", "Add New Product")}
                     </Button>
                 </div>
             </div>
@@ -119,14 +124,14 @@ export default function DashboardContent({
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-xs font-mono uppercase text-muted-foreground">
-                            Total Products
+                            {t("dashboard.activeProducts", "Total Products")}
                         </CardTitle>
                         <Utensils className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold font-heading">{totalProducts}</div>
                         <p className="text-xs text-muted-foreground mt-1">
-                            Active catalog menu items
+                            {t("common.products", "Active catalog menu items")}
                         </p>
                     </CardContent>
                 </Card>
@@ -134,14 +139,14 @@ export default function DashboardContent({
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-xs font-mono uppercase text-muted-foreground">
-                            Active Categories
+                            {t("dashboard.totalCategories", "Active Categories")}
                         </CardTitle>
                         <Layers className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold font-heading">{totalCategories}</div>
                         <p className="text-xs text-muted-foreground mt-1">
-                            Organized customer sections
+                            {t("categories.title", "Organized customer sections")}
                         </p>
                     </CardContent>
                 </Card>
@@ -149,14 +154,14 @@ export default function DashboardContent({
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-xs font-mono uppercase text-muted-foreground">
-                            In Stock Items
+                            {t("common.available", "In Stock Items")}
                         </CardTitle>
                         <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold font-heading">{inStockCount}</div>
                         <p className="text-xs text-emerald-500 font-medium mt-1">
-                            {stockPercentage}% available to order
+                            {stockPercentage}% {t("common.available", "available to order").toLowerCase()}
                         </p>
                     </CardContent>
                 </Card>
@@ -164,7 +169,7 @@ export default function DashboardContent({
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-xs font-mono uppercase text-muted-foreground">
-                            Hidden / Out of Stock
+                            {t("common.unavailable", "Hidden / Out of Stock")}
                         </CardTitle>
                         <AlertTriangle className="h-4 w-4 text-amber-500" />
                     </CardHeader>
@@ -173,7 +178,7 @@ export default function DashboardContent({
                             {outOfStockCount}
                         </div>
                         <p className="text-xs text-amber-500 font-medium mt-1">
-                            Toggled off from menu
+                            {t("common.inactive", "Toggled off from menu")}
                         </p>
                     </CardContent>
                 </Card>
@@ -204,13 +209,13 @@ export default function DashboardContent({
                                             <div className="size-10 rounded-lg overflow-hidden relative bg-muted shrink-0">
                                                 <Image
                                                     src={item.image}
-                                                    alt={item.name}
+                                                    alt={getLocalized(item.name)}
                                                     fill
                                                     className="object-cover"
                                                 />
                                             </div>
                                             <div>
-                                                <p className="font-semibold text-sm">{item.name}</p>
+                                                <p className="font-semibold text-sm">{getLocalized(item.name)}</p>
                                                 <span className="text-muted-foreground">
                                                     {getCategoryName(item.categoryId)} • ${item.price.toFixed(2)}
                                                 </span>
@@ -230,14 +235,14 @@ export default function DashboardContent({
                             <div className="flex items-center justify-between">
                                 <div>
                                     <CardTitle className="text-base font-semibold">
-                                        Category Breakdown
+                                        {t("categories.title", "Category Breakdown")}
                                     </CardTitle>
                                     <CardDescription className="text-xs">
                                         Distribution of products across menu sections
                                     </CardDescription>
                                 </div>
                                 <Button render={<Link href="/admin/categories" />} size="sm" variant="ghost">
-                                    View All <ArrowRight className="h-3.5 w-3.5 ml-1" />
+                                    {t("dashboard.viewAll", "View All")} <ArrowRight className="h-3.5 w-3.5 ml-1" />
                                 </Button>
                             </div>
                         </CardHeader>
@@ -249,15 +254,15 @@ export default function DashboardContent({
                                         className="p-4 rounded-xl border bg-muted/20 flex items-center justify-between"
                                     >
                                         <div>
-                                            <p className="font-semibold text-sm">{cat.name}</p>
+                                            <p className="font-semibold text-sm">{getLocalized(cat.name)}</p>
                                             <p className="text-xs text-muted-foreground font-mono">
                                                 {cat.productCount > 0
-                                                    ? `${cat.productCount} items`
+                                                    ? `${cat.productCount} ${t("common.products", "items").toLowerCase()}`
                                                     : "No items"}
                                             </p>
                                         </div>
                                         <Badge variant="secondary" className="rounded-lg">
-                                            Active
+                                            {t("common.active", "Active")}
                                         </Badge>
                                     </div>
                                 ))}
@@ -271,7 +276,7 @@ export default function DashboardContent({
                         <CardHeader className="pb-3 border-b">
                             <div className="flex items-center justify-between">
                                 <CardTitle className="text-base font-semibold flex items-center gap-2">
-                                    <Wifi className="h-4 w-4 text-primary" /> Store Quick Info
+                                    <Wifi className="h-4 w-4 text-primary" /> {t("settings.restaurantInfo", "Store Quick Info")}
                                 </CardTitle>
                                 <Button render={<Link href="/admin/settings" />} size="icon-sm" variant="ghost">
                                     <Settings className="h-4 w-4" />
@@ -280,7 +285,7 @@ export default function DashboardContent({
                         </CardHeader>
                         <CardContent className="p-6 space-y-4 text-xs">
                             <div>
-                                <p className="text-muted-foreground font-mono uppercase">Guest Wi-Fi</p>
+                                <p className="text-muted-foreground font-mono uppercase">{t("settings.wifiInfo", "Guest Wi-Fi")}</p>
                                 <p className="font-semibold text-sm mt-0.5">
                                     {config?.wifiName || "Not configured"}
                                 </p>
@@ -290,7 +295,7 @@ export default function DashboardContent({
                             </div>
 
                             <div className="border-t pt-3">
-                                <p className="text-muted-foreground font-mono uppercase">Contact Phone</p>
+                                <p className="text-muted-foreground font-mono uppercase">{t("settings.phone", "Contact Phone")}</p>
                                 <p className="font-semibold text-sm mt-0.5 flex items-center gap-1.5">
                                     <Phone className="h-3.5 w-3.5 text-muted-foreground" />
                                     {config?.phone || "Not configured"}
@@ -298,15 +303,15 @@ export default function DashboardContent({
                             </div>
 
                             <div className="border-t pt-3">
-                                <p className="text-muted-foreground font-mono uppercase">Address</p>
+                                <p className="text-muted-foreground font-mono uppercase">{t("settings.address", "Address")}</p>
                                 <p className="text-muted-foreground leading-relaxed mt-0.5">
-                                    {config?.address || "Not configured"}
+                                    {getLocalized(config?.address) || "Not configured"}
                                 </p>
                             </div>
 
                             <div className="pt-2">
                                 <Button render={<Link href="/admin/settings" />} variant="outline" className="w-full rounded-xl">
-                                    Edit Store Settings
+                                    {t("common.settings", "Edit Store Settings")}
                                 </Button>
                             </div>
                         </CardContent>

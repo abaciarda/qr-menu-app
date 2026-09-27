@@ -1,5 +1,7 @@
-import * as React from "react"
-import Link from "next/link"
+"use client";
+
+import * as React from "react";
+import Link from "next/link";
 import {
   LayoutDashboard,
   UtensilsCrossed,
@@ -7,7 +9,7 @@ import {
   Settings,
   LogOut,
   QrCode,
-} from "lucide-react"
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -21,55 +23,57 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { ModeToggle } from "./mode-toggle"
+} from "@/components/ui/sidebar";
+import { ModeToggle } from "./mode-toggle";
+import { LanguageToggle } from "./language-toggle";
+import { useLanguage } from "@/lib/i18n/context";
 
-const data = {
-  navMain: [
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { t } = useLanguage();
+
+  const navMain = [
     {
-      title: "Overview",
+      title: t("common.overview", "Overview"),
       items: [
         {
-          title: "Dashboard",
+          title: t("common.dashboard", "Dashboard"),
           url: "/admin/dashboard",
           icon: LayoutDashboard,
         },
       ],
     },
     {
-      title: "Menu Management",
+      title: t("common.menuManagement", "Menu Management"),
       items: [
         {
-          title: "Products",
+          title: t("common.products", "Products"),
           url: "/admin/products",
           icon: UtensilsCrossed,
         },
         {
-          title: "Categories & Options",
+          title: t("common.categoriesAndOptions", "Categories & Options"),
           url: "/admin/categories",
           icon: Layers,
         },
       ],
     },
     {
-      title: "Operations",
+      title: t("common.operations", "Operations"),
       items: [
         {
-          title: "Settings",
+          title: t("common.settings", "Settings"),
           url: "/admin/settings",
           icon: Settings,
         },
         {
-          title: "Sign Out",
+          title: t("common.signOut", "Sign Out"),
           url: "/admin",
           icon: LogOut,
         },
       ],
     },
-  ],
-}
+  ];
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -77,35 +81,38 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <div className="h-8 w-8 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
             <QrCode className="h-4 w-4" />
           </div>
-          <span>Admin Panel</span>
+          <span>{t("common.adminPanel", "Admin Panel")}</span>
         </div>
       </SidebarHeader>
       <SidebarContent>
-        {data.navMain.map((group) => (
-          <SidebarGroup key={group.title}>
+        {navMain.map((group, groupIdx) => (
+          <SidebarGroup key={groupIdx}>
             <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {group.items.map((item) => {
-                  const Icon = item.icon
+                  const Icon = item.icon;
                   return (
-                    <SidebarMenuItem key={item.title}>
+                    <SidebarMenuItem key={item.url}>
                       <SidebarMenuButton render={<Link href={item.url} />}>
                         <Icon className="h-4 w-4" />
                         <span>{item.title}</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
-                  )
+                  );
                 })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
       </SidebarContent>
-      <SidebarFooter>
-        <ModeToggle />
+      <SidebarFooter className="p-3 border-t border-sidebar-border gap-2">
+        <div className="flex items-center justify-between gap-2 w-full">
+          <LanguageToggle variant="outline" className="flex-1 justify-start text-xs" />
+          <ModeToggle />
+        </div>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

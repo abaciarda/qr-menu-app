@@ -23,6 +23,9 @@ import {
 import { updateRestaurantConfigAction } from "./actions";
 import { generateQRCode, downloadQRCode } from "@/lib/utils/qr";
 import ImageUploadCloudinary from "@/components/ui/image-upload-cloudinary";
+import { MultilingualInput } from "@/components/ui/multilingual-input";
+import { MultilingualTextarea } from "@/components/ui/multilingual-textarea";
+import { useLanguage } from "@/lib/i18n/context";
 
 const CURRENCIES: SelectOption[] = [
     { value: "₺", label: "₺ (Turkish Lira)" },
@@ -51,6 +54,7 @@ export default function SettingsContent({
 }: {
     initialConfig: RestaurantConfig;
 }) {
+    const { t } = useLanguage();
     const [isPending, startTransition] = useTransition();
     const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
     const [isGeneratingQR, setIsGeneratingQR] = useState(false);
@@ -95,6 +99,10 @@ export default function SettingsContent({
         },
     });
 
+    const watchName = watch("name");
+    const watchDesc = watch("description");
+    const watchAddress = watch("address");
+
     const onSubmit = async (inputData: UpdateRestaurantConfigInput) => {
         const data = {
             ...inputData,
@@ -107,7 +115,7 @@ export default function SettingsContent({
                 toast.error(result.error ?? "Failed to update settings.");
                 return;
             }
-            toast.success("Restaurant settings updated successfully!");
+            toast.success(t("settings.savedSuccess", "Restaurant settings updated successfully!"));
         });
     };
 
@@ -116,10 +124,10 @@ export default function SettingsContent({
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b pb-6">
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight font-heading">
-                        Store & Wi-Fi Settings
+                        {t("settings.title", "Store & Wi-Fi Settings")}
                     </h1>
                     <p className="text-sm text-muted-foreground mt-1">
-                        Configure restaurant identity, customer Wi-Fi access, contacts, and currency
+                        {t("settings.subtitle", "Configure restaurant identity, customer Wi-Fi access, contacts, and currency")}
                     </p>
                 </div>
 
@@ -129,10 +137,10 @@ export default function SettingsContent({
                     className="rounded-xl min-w-[140px]"
                 >
                     {isSubmitting || isPending ? (
-                        "Saving..."
+                        t("common.loading", "Saving...")
                     ) : (
                         <span className="flex items-center gap-1.5">
-                            <Save className="h-4 w-4" /> Save Settings
+                            <Save className="h-4 w-4" /> {t("common.save", "Save Settings")}
                         </span>
                     )}
                 </Button>
@@ -144,37 +152,34 @@ export default function SettingsContent({
                         <div className="flex items-center gap-2">
                             <Store className="h-4 w-4 text-primary" />
                             <CardTitle className="text-base font-semibold">
-                                Store Identity
+                                {t("settings.restaurantInfo", "Store Identity")}
                             </CardTitle>
                         </div>
                     </CardHeader>
 
                     <CardContent className="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="store-name">Restaurant Name</Label>
-                                <Input
-                                    id="store-name"
-                                    {...register("name")}
-                                    className="h-10 rounded-xl"
-                                />
-                                {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
-                            </div>
+                            <MultilingualInput
+                                id="store-name"
+                                label={t("settings.restaurantName", "Restaurant Name")}
+                                required
+                                value={watchName || ""}
+                                onChange={(val) => setValue("name", val)}
+                            />
+                            {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
 
-                            <div className="space-y-2">
-                                <Label htmlFor="store-desc">Description / Tagline</Label>
-                                <textarea
-                                    id="store-desc"
-                                    rows={3}
-                                    {...register("description")}
-                                    className="min-h-20 w-full rounded-xl border bg-transparent p-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                                />
-                                {errors.description && <p className="text-xs text-destructive">{errors.description.message}</p>}
-                            </div>
+                            <MultilingualTextarea
+                                id="store-desc"
+                                label={t("settings.restaurantDescription", "Description / Tagline")}
+                                value={watchDesc || ""}
+                                onChange={(val) => setValue("description", val)}
+                                rows={3}
+                            />
+                            {errors.description && <p className="text-xs text-destructive">{errors.description.message}</p>}
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Store Logo</Label>
+                            <Label>{t("settings.logo", "Store Logo")}</Label>
                             <ImageUploadCloudinary
                                 value={watch("logo") || ""}
                                 onChange={(url) => setValue("logo", url)}
@@ -192,17 +197,17 @@ export default function SettingsContent({
                                 <div className="flex items-center gap-2">
                                     <Wifi className="h-4 w-4 text-primary" />
                                     <CardTitle className="text-base font-semibold">
-                                        Guest Wi-Fi
+                                        {t("settings.wifiInfo", "Guest Wi-Fi")}
                                     </CardTitle>
                                 </div>
                             </CardHeader>
 
                             <CardContent className="p-4 space-y-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="wifi-ssid">Network Name (SSID)</Label>
+                                    <Label htmlFor="wifi-ssid">{t("settings.wifiName", "Network Name (SSID)")}</Label>
                                     <Input
                                         id="wifi-ssid"
-                                        placeholder="e.g. Atlas_Guest_5G"
+                                        placeholder="e.g. Guest_5G"
                                         {...register("wifiName")}
                                         className="h-10 rounded-xl"
                                     />
@@ -210,11 +215,11 @@ export default function SettingsContent({
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="wifi-pass">Password</Label>
+                                    <Label htmlFor="wifi-pass">{t("settings.wifiPassword", "Password")}</Label>
                                     <Input
                                         id="wifi-pass"
                                         type="text"
-                                        placeholder="e.g. AtlasKarakoy2026"
+                                        placeholder="Wi-Fi Password"
                                         {...register("wifiPassword")}
                                         className="h-10 rounded-xl font-mono"
                                     />
@@ -228,7 +233,7 @@ export default function SettingsContent({
                                 <div className="flex items-center gap-2">
                                     <Phone className="h-4 w-4 text-primary" />
                                     <CardTitle className="text-base font-semibold">
-                                        Contact Info
+                                        {t("settings.contactAndLocation", "Contact Info")}
                                     </CardTitle>
                                 </div>
                             </CardHeader>
@@ -236,7 +241,7 @@ export default function SettingsContent({
                             <CardContent className="p-4 space-y-4">
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="space-y-2">
-                                        <Label htmlFor="phone">Phone</Label>
+                                        <Label htmlFor="phone">{t("settings.phone", "Phone")}</Label>
                                         <Input
                                             id="phone"
                                             {...register("phone")}
@@ -246,7 +251,7 @@ export default function SettingsContent({
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="whatsapp">WhatsApp</Label>
+                                        <Label htmlFor="whatsapp">{t("settings.whatsapp", "WhatsApp")}</Label>
                                         <Input
                                             id="whatsapp"
                                             {...register("whatsappNumber")}
@@ -258,7 +263,7 @@ export default function SettingsContent({
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="currency">Currency</Label>
+                                    <Label htmlFor="currency">{t("settings.currency", "Currency")}</Label>
                                     <Select
                                         value={watch("currencySymbol") ?? "₺"}
                                         onValueChange={(value) => setValue("currencySymbol", value)}
@@ -279,18 +284,16 @@ export default function SettingsContent({
                                     {errors.instagramUrl && <p className="text-xs text-destructive">{errors.instagramUrl.message}</p>}
                                 </div>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="address">Address</Label>
-                                    <Input
-                                        id="address"
-                                        {...register("address")}
-                                        className="h-10 rounded-xl"
-                                    />
-                                    {errors.address && <p className="text-xs text-destructive">{errors.address.message}</p>}
-                                </div>
+                                <MultilingualInput
+                                    id="address"
+                                    label={t("settings.address", "Address")}
+                                    value={watchAddress || ""}
+                                    onChange={(val) => setValue("address", val)}
+                                />
+                                {errors.address && <p className="text-xs text-destructive">{errors.address.message}</p>}
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="maps">Google Maps URL</Label>
+                                    <Label htmlFor="maps">{t("settings.googleMapsUrl", "Google Maps URL")}</Label>
                                     <Input
                                         id="maps"
                                         {...register("googleMapsUrl")}
@@ -315,7 +318,7 @@ export default function SettingsContent({
                             <div className="flex items-center justify-center bg-white p-6 rounded-xl border">
                                 {isGeneratingQR ? (
                                     <div className="size-40 flex items-center justify-center bg-muted/20 rounded-lg animate-pulse">
-                                        <span className="text-sm text-muted-foreground">Generating...</span>
+                                        <span className="text-sm text-muted-foreground">{t("common.loading", "Generating...")}</span>
                                     </div>
                                 ) : qrCodeUrl ? (
                                     <img

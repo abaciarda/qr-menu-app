@@ -1,22 +1,28 @@
+"use client";
+
+import { useLanguage } from "@/lib/i18n/context";
 import { SlideCategory } from "@/types/category";
 import { ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function CategoryCard({id, name, image, slug, productCount } : SlideCategory) {
+export default function CategoryCard({ name, image, slug, productCount } : SlideCategory) {
+    const { t, getLocalized } = useLanguage();
+    const localizedName = getLocalized(name);
+
     return (
         <Link href={`/${slug}`} className="bg-ui-surface h-36 rounded-2xl relative overflow-hidden shadow-lg shadow-ui-ink/10">
             <Image
                 src={ image }
                 fill
                 sizes="(max-width: 640px) 100vw, 400px"
-                alt={`${name} Category`}
+                alt={`${localizedName} Category`}
                 className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
             <div className="absolute bottom-4 left-5 flex flex-col gap-0.5">
-                <p className="text-xl text-white font-semibold">{ name }</p>
-                <p className="text-xs text-white/70">{ productCount } Products</p>
+                <p className="text-xl text-white font-semibold">{ localizedName }</p>
+                <p className="text-xs text-white/70">{ productCount } { t("common.products", "Products") }</p>
             </div>
 
             <div className="absolute bottom-4 right-5">

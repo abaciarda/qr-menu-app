@@ -1,10 +1,20 @@
+"use client";
+
+import { useLanguage } from "@/lib/i18n/context";
 import { SearchIcon } from "lucide-react";
 
 export default function SearchInput({
-  placeholder = "Search...",
+  placeholder,
+  value,
+  onChange,
 }: {
   placeholder?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
+  const { t } = useLanguage();
+  const defaultPlaceholder = t("customer.searchPlaceholder", "Search for delicious items...");
+
   return (
     <div className="relative">
       <SearchIcon
@@ -14,7 +24,9 @@ export default function SearchInput({
       />
       <input
         type="text"
-        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder || defaultPlaceholder}
         className="w-full h-12 bg-ui-surface rounded-full pl-11 pr-4 text-sm text-ui-ink placeholder:text-ui-ink-muted outline-none border border-transparent focus:bg-ui-surface-raised focus:border-ui-line focus:shadow-sm transition-colors"
       />
     </div>

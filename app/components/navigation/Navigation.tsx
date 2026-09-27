@@ -2,6 +2,7 @@
 
 import { useCart } from "@/app/context/CartContext";
 import { useSidebar } from "@/app/context/SidebarContext";
+import { LanguageToggle } from "@/components/language-toggle";
 import { MenuIcon, ShoppingCartIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -24,18 +25,22 @@ export default function Navigation() {
           QR Menu
         </Link>
 
-        <button
-          onClick={openCart}
-          aria-label="Open cart"
-          className="relative flex items-center justify-center w-10 h-10 bg-ui-surface rounded-full hoverable-btn"
-        >
-          <ShoppingCartIcon size={20} />
-          {totalItems > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-ui-accent text-white text-[10px] font-mono font-bold rounded-full flex items-center justify-center">
-              {totalItems > 99 ? "99+" : totalItems}
-            </span>
-          )}
-        </button>
+        <div className="flex items-center gap-2">
+          <LanguageToggle variant="ghost" showLabel={false} className="size-10 p-0 rounded-full bg-ui-surface flex items-center justify-center border-0" />
+          
+          <button
+            onClick={openCart}
+            aria-label="Open cart"
+            className="relative flex items-center justify-center w-10 h-10 bg-ui-surface rounded-full hoverable-btn"
+          >
+            <ShoppingCartIcon size={20} />
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-ui-accent text-white text-[10px] font-mono font-bold rounded-full flex items-center justify-center">
+                {totalItems > 99 ? "99+" : totalItems}
+              </span>
+            )}
+          </button>
+        </div>
       </div>
     </nav>
   );

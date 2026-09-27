@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useCart } from "@/app/context/CartContext";
 import { useFavorites } from "@/app/context/FavoritesContext";
 import { OptionGroup, RecommendedItem } from "@/types/category";
+import { useLanguage } from "@/lib/i18n/context";
 
 const BLUR_DATA_URL =
   "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWY3Ii8+PC9zdmc+";
@@ -35,28 +36,36 @@ function OptionPicker({
   value: string | null;
   onChange: (v: string) => void;
 }) {
+  const { t, getLocalized } = useLanguage();
+  const localizedLabel = getLocalized(label);
+
   return (
     <div className="bg-ui-surface rounded-xl px-4 py-3 flex flex-col gap-2.5">
       <div className="flex items-center gap-2">
-        <span className="text-sm text-ui-ink font-medium">{label}</span>
+        <span className="text-sm text-ui-ink font-medium">{localizedLabel}</span>
         {required && (
-          <span className="text-[10px] font-mono text-ui-accent">REQUIRED</span>
+          <span className="text-[10px] font-mono text-ui-accent uppercase">
+            {t("customer.requiredSelection", "REQUIRED")}
+          </span>
         )}
       </div>
       <div className="flex flex-wrap gap-2">
-        {options.map((opt) => (
-          <button
-            key={opt}
-            onClick={() => onChange(opt)}
-            className={`text-sm font-medium px-3.5 py-1.5 rounded-full border transition-colors ${
-              value === opt
-                ? "bg-ui-ink text-ui-background border-ui-ink"
-                : "bg-ui-background text-ui-ink border-ui-line hoverable-btn"
-            }`}
-          >
-            {opt}
-          </button>
-        ))}
+        {options.map((opt) => {
+          const localizedOpt = getLocalized(opt);
+          return (
+            <button
+              key={opt}
+              onClick={() => onChange(opt)}
+              className={`text-sm font-medium px-3.5 py-1.5 rounded-full border transition-colors ${
+                value === opt
+                  ? "bg-ui-ink text-ui-background border-ui-ink"
+                  : "bg-ui-background text-ui-ink border-ui-line hoverable-btn"
+              }`}
+            >
+              {localizedOpt}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -67,6 +76,10 @@ export default function ProductPopup({ name, description, price, image, optionGr
   const [selections, setSelections] = useState<Record<string, string>>({});
   const { addItem, openCart } = useCart();
   const { toggle, isFavorite } = useFavorites();
+  const { t, getLocalized } = useLanguage();
+
+  const localizedName = getLocalized(name);
+  const localizedDesc = getLocalized(description);
 
   const favorited = isFavorite(name);
 
@@ -79,7 +92,10 @@ export default function ProductPopup({ name, description, price, image, optionGr
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  const selectedOptions = Object.values(selections).filter(Boolean).join(", ") || null;
+  const selectedOptions = Object.values(selections)
+    .map((opt) => getLocalized(opt))
+    .filter(Boolean)
+    .join(", ") || null;
 
   return (
     <AnimatePresence>
@@ -115,7 +131,7 @@ export default function ProductPopup({ name, description, price, image, optionGr
             <div className="h-64 relative shrink-0 bg-ui-surface">
               <Image
                 src={image}
-                alt={name}
+                alt={localizedName}
                 fill
                 priority
                 sizes="448px"
@@ -148,13 +164,13 @@ export default function ProductPopup({ name, description, price, image, optionGr
                 <div className="w-10 h-1 rounded-full bg-ui-line mx-auto mb-5" />
 
                 <div className="flex items-start justify-between gap-4">
-                  <h2 className="font-display font-bold text-2xl text-ui-ink">{name}</h2>
+                  <h2 className="font-display font-bold text-2xl text-ui-ink">{localizedName}</h2>
                   <span className="font-mono text-ui-ink font-semibold text-lg shrink-0">
                     ${(price * qty).toFixed(2)}
                   </span>
                 </div>
 
-                <p className="text-ui-ink-muted text-sm mt-2 leading-relaxed">{description}</p>
+                <p className="text-ui-ink-muted text-sm mt-2 leading-relaxed">{localizedDesc}</p>
 
                 {optionGroups.length > 0 && (
                   <div className="flex flex-col gap-2 mt-5">
@@ -173,15 +189,17 @@ export default function ProductPopup({ name, description, price, image, optionGr
 
                 {recommended.length > 0 && (
                   <div className="mt-6">
-                    <h3 className="font-display font-semibold text-base text-ui-ink mb-3">Goes well with</h3>
+                    <h3 className="font-display font-semibold text-base text-ui-ink mb-3">
+                      {t("customer.recommended", "Goes well with")}
+                    </h3>
                     <div className="story-track flex gap-3 overflow-x-auto pb-1">
                       {recommended.map((item) => (
                         <div key={item.name} className="shrink-0 w-32 bg-ui-surface rounded-xl overflow-hidden">
                           <div className="h-20 relative">
-                            <Image src={item.image} alt={item.name} fill sizes="128px" className="object-cover" />
+                            <Image src={item.image} alt={getLocalized(item.name)} fill sizes="128px" className="object-cover" />
                           </div>
                           <div className="px-2.5 py-2">
-                            <p className="text-xs text-ui-ink font-medium truncate">{item.name}</p>
+                            <p className="text-xs text-ui-ink font-medium truncate">{getLocalized(item.name)}</p>
                             <p className="text-xs font-mono text-ui-ink-muted mt-0.5">${item.price.toFixed(2)}</p>
                           </div>
                         </div>
@@ -211,13 +229,13 @@ export default function ProductPopup({ name, description, price, image, optionGr
 
               <button
                 onClick={() => {
-                  addItem({ name, price, image, qty, options: selectedOptions });
+                  addItem({ name: localizedName, price, image, qty, options: selectedOptions });
                   onClose();
                   openCart();
                 }}
                 className="flex-1 bg-ui-accent text-white font-medium rounded-full py-3"
               >
-                Add to order — ${(price * qty).toFixed(2)}
+                {t("customer.addToOrder", "Add to order")} — ${(price * qty).toFixed(2)}
               </button>
             </div>
           </motion.div>

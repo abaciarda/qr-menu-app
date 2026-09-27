@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, Utensils } from "lucide-react";
+import { ArrowLeft, Utensils } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,17 +16,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ImageUploadCloudinary from "@/components/ui/image-upload-cloudinary";
+import { MultilingualInput } from "@/components/ui/multilingual-input";
+import { MultilingualTextarea } from "@/components/ui/multilingual-textarea";
 import { useForm } from "react-hook-form";
 import { CreateProductFormValues, CreateProductInput, createProductSchema } from "@/lib/validations/product";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createProductAction, getCategoriesAction } from "../actions";
 import { toast } from "sonner";
+import { useLanguage } from "@/lib/i18n/context";
 
 export default function NewProductPage() {
   const router = useRouter();
+  const { t, getLocalized } = useLanguage();
   const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
 
-  const { register, handleSubmit, setValue, watch, formState: { errors, isSubmitting } } = useForm<CreateProductFormValues, unknown, CreateProductInput>({
+  const { handleSubmit, setValue, watch, formState: { errors, isSubmitting } } = useForm<CreateProductFormValues, unknown, CreateProductInput>({
     resolver: zodResolver(createProductSchema),
     defaultValues: {
       name: "",
@@ -49,10 +53,12 @@ export default function NewProductPage() {
         }
       }
     });
-  }, []);
+  }, [setValue]);
 
   const watchCategory = watch("categoryId");
   const watchIsAvailable = watch("isAvailable");
+  const watchName = watch("name");
+  const watchDesc = watch("description");
 
   const onSubmit = async (data: CreateProductInput) => {
     if (!data.image) {
@@ -65,7 +71,7 @@ export default function NewProductPage() {
       toast.error(result.error || "Failed to create product.");
       return;
     }
-    toast.success("Product created successfully!");
+    toast.success(t("products.createdSuccess", "Product created successfully!"));
     router.push("/admin/products");
     router.refresh();
   };
@@ -78,18 +84,18 @@ export default function NewProductPage() {
             href="/admin/products"
             className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground mb-2 transition-colors"
           >
-            <ArrowLeft className="h-3.5 w-3.5" /> Back to Products Catalog
+            <ArrowLeft className="h-3.5 w-3.5" /> {t("common.back", "Back to Products Catalog")}
           </Link>
           <h1 className="text-2xl font-bold tracking-tight font-heading flex items-center gap-2">
-            <Utensils className="h-6 w-6 text-primary" /> Create New Menu Product
+            <Utensils className="h-6 w-6 text-primary" /> {t("products.addProduct", "Create New Menu Product")}
           </h1>
         </div>
         <div className="flex items-center gap-2">
           <Button render={<Link href="/admin/products" />} variant="outline">
-            Cancel
+            {t("common.cancel", "Cancel")}
           </Button>
           <Button onClick={handleSubmit(onSubmit)} disabled={isSubmitting}>
-            {isSubmitting ? "Publishing..." : "Save Product"}
+            {isSubmitting ? t("common.loading", "Publishing...") : t("common.save", "Save Product")}
           </Button>
         </div>
       </div>
@@ -98,44 +104,47 @@ export default function NewProductPage() {
         <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader className="pb-3 border-b">
-              <CardTitle className="text-base font-semibold">Product Information</CardTitle>
+              <CardTitle className="text-base font-semibold">{t("products.productName", "Product Information")}</CardTitle>
             </CardHeader>
             <CardContent className="p-6 space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Product Name *</Label>
-                <Input id="name" {...register("name")} className="h-11 rounded-xl" />
-                {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="description">Description & Ingredients *</Label>
-                <textarea
-                  id="description"
-                  rows={4}
-                  {...register("description")}
-                  className="w-full rounded-xl border bg-transparent p-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                />
-                {errors.description && (
-                  <p className="text-xs text-destructive">{errors.description.message}</p>
-                )}
-              </div>
+              <MultilingualInput
+                id="name"
+                label={t("products.productName", "Product Name")}
+                required
+                value={watchName || ""}
+                onChange={(val) => setValue("name", val)}
+              />
+              {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
+
+              <MultilingualTextarea
+                id="description"
+                label={t("products.description", "Description & Ingredients")}
+                required
+                value={watchDesc || ""}
+                onChange={(val) => setValue("description", val)}
+                rows={4}
+              />
+              {errors.description && (
+                <p className="text-xs text-destructive">{errors.description.message}</p>
+              )}
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-3 border-b">
-              <CardTitle className="text-base font-semibold">Category & Price</CardTitle>
+              <CardTitle className="text-base font-semibold">{t("products.category", "Category & Price")}</CardTitle>
             </CardHeader>
             <CardContent className="p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Category *</Label>
+                  <Label>{t("products.category", "Category")} *</Label>
                   {categories.length === 0 ? (
                     <div className="h-11 rounded-xl border bg-muted/30 animate-pulse" />
                   ) : (
                     <Select
                       value={String(watchCategory)}
                       onValueChange={(val) => setValue("categoryId", Number(val))}
-                      options={categories.map((c) => ({ value: String(c.id), label: c.name }))}
+                      options={categories.map((c) => ({ value: String(c.id), label: getLocalized(c.name) }))}
                     />
                   )}
                   {errors.categoryId && (
@@ -143,12 +152,12 @@ export default function NewProductPage() {
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="price">Price *</Label>
+                  <Label htmlFor="price">{t("products.price", "Price")} *</Label>
                   <Input
                     id="price"
                     type="number"
                     step="0.01"
-                    {...register("price")}
+                    onChange={(e) => setValue("price", parseFloat(e.target.value) || 0)}
                     className="h-11 rounded-xl font-mono"
                   />
                   {errors.price && (
@@ -161,12 +170,12 @@ export default function NewProductPage() {
 
           <Card>
             <CardHeader className="pb-3 border-b">
-              <CardTitle className="text-base font-semibold">Stock Availability</CardTitle>
+              <CardTitle className="text-base font-semibold">{t("products.availability", "Stock Availability")}</CardTitle>
             </CardHeader>
             <CardContent className="p-6 flex items-center justify-between">
               <div>
                 <Label htmlFor="isAvailable" className="cursor-pointer font-medium">
-                  In Stock
+                  {t("common.available", "In Stock")}
                 </Label>
                 <p className="text-xs text-muted-foreground">
                   Toggle off to hide item from customer QR menu
@@ -184,7 +193,7 @@ export default function NewProductPage() {
         <div className="space-y-6">
           <Card>
             <CardHeader className="pb-3 border-b">
-              <CardTitle className="text-base font-semibold">Product Photo</CardTitle>
+              <CardTitle className="text-base font-semibold">{t("products.image", "Product Photo")}</CardTitle>
             </CardHeader>
             <CardContent className="p-6">
               <ImageUploadCloudinary
@@ -201,7 +210,7 @@ export default function NewProductPage() {
           <Card className="bg-muted/30">
             <CardContent className="p-6">
               <Button type="submit" disabled={isSubmitting} className="w-full h-11 rounded-xl">
-                {isSubmitting ? "Creating..." : "Publish Product"}
+                {isSubmitting ? t("common.loading", "Creating...") : t("products.addProduct", "Publish Product")}
               </Button>
             </CardContent>
           </Card>
@@ -210,4 +219,3 @@ export default function NewProductPage() {
     </div>
   );
 }
-

@@ -28,6 +28,7 @@ import { ProductItem } from "@/lib/types";
 import { deleteProduct, toggleProductStockAction } from "./actions";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useLanguage } from "@/lib/i18n/context";
 
 type ProductWithCategory = ProductItem & { categoryName: string };
 
@@ -37,6 +38,7 @@ export default function ProductsContentPage({
   initialProducts: ProductWithCategory[];
 }) {
   const router = useRouter();
+  const { t, getLocalized } = useLanguage();
   const [products, setProducts] = useState(initialProducts);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -44,7 +46,7 @@ export default function ProductsContentPage({
   const [deleteProductId, setDeleteProductId] = useState<number | null>(null);
 
   const categoryNames = Array.from(
-    new Set(products.map((p) => p.categoryName))
+    new Set(products.map((p) => getLocalized(p.categoryName)))
   ).sort();
   const CATEGORIES = ["All", ...categoryNames];
 
@@ -79,18 +81,22 @@ export default function ProductsContentPage({
         router.refresh();
         toast.error(result.error ?? "Failed to delete product.");
       } else {
-        toast.success("Product deleted successfully.");
+        toast.success(t("products.deletedSuccess", "Product deleted successfully."));
       }
       setDeleteProductId(null);
     });
   };
 
   const filteredProducts = products.filter((p) => {
+    const localizedName = getLocalized(p.name);
+    const localizedDesc = getLocalized(p.description);
+    const localizedCat = getLocalized(p.categoryName);
+
     const matchesSearch =
-      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      localizedName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      localizedDesc.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory =
-      selectedCategory === "All" || p.categoryName === selectedCategory;
+      selectedCategory === "All" || localizedCat === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -99,16 +105,16 @@ export default function ProductsContentPage({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b pb-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight font-heading">
-            Products &amp; Menu Catalog
+            {t("products.title", "Products & Menu Catalog")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Manage menu items, prices, descriptions, and live stock availability toggles
+            {t("products.subtitle", "Manage menu items, prices, descriptions, and live stock availability toggles")}
           </p>
         </div>
 
         <Button render={<Link href="/admin/products/new" />} className="rounded-xl">
           <Plus className="h-4 w-4 mr-1.5" />
-          Add New Product
+          {t("products.addProduct", "Add New Product")}
         </Button>
       </div>
 
@@ -118,7 +124,7 @@ export default function ProductsContentPage({
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Search products by name or description..."
+              placeholder={t("products.searchPlaceholder", "Search products by name or description...")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9 h-10 rounded-xl"
@@ -127,7 +133,7 @@ export default function ProductsContentPage({
 
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-xs text-muted-foreground mr-1.5 flex items-center gap-1 shrink-0">
-              <Filter className="h-3.5 w-3.5" /> Category:
+              <Filter className="h-3.5 w-3.5" /> {t("common.filter", "Category")}:
             </span>
             {CATEGORIES.map((cat) => (
               <Button
@@ -137,7 +143,7 @@ export default function ProductsContentPage({
                 onClick={() => setSelectedCategory(cat)}
                 className="rounded-lg shrink-0"
               >
-                {cat}
+                {cat === "All" ? t("common.all", "All") : cat}
               </Button>
             ))}
           </div>
@@ -149,10 +155,10 @@ export default function ProductsContentPage({
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-base font-semibold">
-                Product Catalog ({filteredProducts.length})
+                {t("common.products", "Product Catalog")} ({filteredProducts.length})
               </CardTitle>
               <CardDescription className="text-xs">
-                Toggle switch to immediately show or hide items on customer menu
+                {t("products.subtitle", "Toggle switch to immediately show or hide items on customer menu")}
               </CardDescription>
             </div>
           </div>
@@ -162,19 +168,19 @@ export default function ProductsContentPage({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-16">Item</TableHead>
-                <TableHead>Product Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Stock Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="w-16">{t("products.image", "Item")}</TableHead>
+                <TableHead>{t("products.productName", "Product Name")}</TableHead>
+                <TableHead>{t("products.category", "Category")}</TableHead>
+                <TableHead>{t("products.price", "Price")}</TableHead>
+                <TableHead>{t("products.availability", "Stock Status")}</TableHead>
+                <TableHead className="text-right">{t("common.actions", "Actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredProducts.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
-                    No products found matching your search or category filter.
+                    {t("products.noProductsFound", "No products found matching your search or category filter.")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -184,7 +190,7 @@ export default function ProductsContentPage({
                       <div className="size-10 rounded-lg overflow-hidden relative bg-muted shrink-0">
                         <Image
                           src={product.image}
-                          alt={product.name}
+                          alt={getLocalized(product.name)}
                           fill
                           className="object-cover"
                         />
@@ -192,14 +198,14 @@ export default function ProductsContentPage({
                     </TableCell>
 
                     <TableCell className="max-w-xs">
-                      <p className="font-medium text-sm truncate">{product.name}</p>
+                      <p className="font-medium text-sm truncate">{getLocalized(product.name)}</p>
                       <p className="text-xs text-muted-foreground line-clamp-1">
-                        {product.description}
+                        {getLocalized(product.description)}
                       </p>
                     </TableCell>
 
                     <TableCell>
-                      <Badge variant="outline">{product.categoryName}</Badge>
+                      <Badge variant="outline">{getLocalized(product.categoryName)}</Badge>
                     </TableCell>
 
                     <TableCell className="font-mono font-semibold text-sm">
@@ -218,11 +224,11 @@ export default function ProductsContentPage({
                         <span className="text-xs font-medium">
                           {product.isAvailable ? (
                             <span className="text-foreground inline-flex items-center gap-1">
-                              <CheckCircle className="h-3.5 w-3.5" /> In Stock
+                              <CheckCircle className="h-3.5 w-3.5" /> {t("common.available", "In Stock")}
                             </span>
                           ) : (
                             <span className="text-destructive inline-flex items-center gap-1">
-                              <AlertTriangle className="h-3.5 w-3.5" /> Hidden
+                              <AlertTriangle className="h-3.5 w-3.5" /> {t("common.unavailable", "Hidden")}
                             </span>
                           )}
                         </span>
@@ -259,17 +265,17 @@ export default function ProductsContentPage({
       <Dialog open={deleteProductId !== null} onOpenChange={() => setDeleteProductId(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Product</DialogTitle>
+            <DialogTitle>{t("products.deleteProduct", "Delete Product")}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this product? This action cannot be undone.
+              {t("products.confirmDeleteMessage", "Are you sure you want to delete this product? This action cannot be undone.")}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteProductId(null)}>
-              Cancel
+              {t("common.cancel", "Cancel")}
             </Button>
             <Button variant="destructive" onClick={confirmDeleteProduct} disabled={isPending}>
-              {isPending ? "Deleting..." : "Delete Product"}
+              {isPending ? t("common.loading", "Deleting...") : t("common.delete", "Delete Product")}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -9,23 +9,25 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { useLanguage } from "@/lib/i18n/context";
 import React from "react";
-
-const ROUTE_LABELS: Record<string, string> = {
-  admin: "Admin Panel",
-  dashboard: "Dashboard",
-  products: "Products",
-  new: "Add Product",
-  edit: "Edit Product",
-  categories: "Categories & Options",
-  settings: "Settings",
-};
 
 export function AdminBreadcrumb() {
   const pathname = usePathname();
+  const { t } = useLanguage();
   const segments = pathname.split("/").filter(Boolean);
 
   if (segments.length === 0) return null;
+
+  const routeLabels: Record<string, string> = {
+    admin: t("common.adminPanel", "Admin Panel"),
+    dashboard: t("common.dashboard", "Dashboard"),
+    products: t("common.products", "Products"),
+    new: t("products.addProduct", "Add Product"),
+    edit: t("products.editProduct", "Edit Product"),
+    categories: t("common.categoriesAndOptions", "Categories & Options"),
+    settings: t("common.settings", "Settings"),
+  };
 
   const items: { label: string; href: string; isLast: boolean }[] = [];
 
@@ -36,7 +38,7 @@ export function AdminBreadcrumb() {
     if (segment === "admin") {
       if (segments.length > 1) {
         items.push({
-          label: ROUTE_LABELS["admin"],
+          label: routeLabels["admin"],
           href: "/admin/dashboard",
           isLast: false,
         });
@@ -48,7 +50,7 @@ export function AdminBreadcrumb() {
       return;
     }
 
-    const label = ROUTE_LABELS[segment] || segment.charAt(0).toUpperCase() + segment.slice(1);
+    const label = routeLabels[segment] || segment.charAt(0).toUpperCase() + segment.slice(1);
     const isLast = index === segments.length - 1;
 
     items.push({
