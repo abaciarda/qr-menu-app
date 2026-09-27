@@ -1,6 +1,7 @@
 "use client";
 
 import { useCart } from "@/app/context/CartContext";
+import { useLanguage } from "@/lib/i18n/context";
 import { AnimatePresence, motion } from "framer-motion";
 import { MinusIcon, PlusIcon, ShoppingBagIcon, Trash2Icon, XIcon } from "lucide-react";
 import Image from "next/image";
@@ -8,6 +9,7 @@ import { useEffect } from "react";
 
 export default function CartSheet() {
   const { items, isOpen, closeCart, removeItem, updateQty, totalItems, totalPrice } = useCart();
+  const { t, getLocalized } = useLanguage();
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -47,8 +49,8 @@ export default function CartSheet() {
 
             <div className="flex items-center justify-between px-5 py-3 border-b border-ui-line shrink-0">
               <div>
-                <h2 className="font-display font-bold text-xl text-ui-ink">Your Order</h2>
-                <p className="text-xs text-ui-ink-muted font-mono mt-0.5">{totalItems} item{totalItems !== 1 ? "s" : ""}</p>
+                <h2 className="font-display font-bold text-xl text-ui-ink">{t("customer.yourOrder", "Your Order")}</h2>
+                <p className="text-xs text-ui-ink-muted font-mono mt-0.5">{totalItems} {t("customer.itemCount", "items")}</p>
               </div>
               <button
                 onClick={closeCart}
@@ -61,8 +63,8 @@ export default function CartSheet() {
             {items.length === 0 ? (
               <div className="flex-1 flex flex-col items-center justify-center gap-3 text-ui-ink-muted pb-10 pt-10">
                 <ShoppingBagIcon size={40} strokeWidth={1.5} />
-                <p className="text-sm font-medium">Your cart is empty</p>
-                <p className="text-xs text-ui-ink-muted">Tap any item to add it to your list</p>
+                <p className="text-sm font-medium">{t("customer.emptyCart", "Your cart is empty")}</p>
+                <p className="text-xs text-ui-ink-muted">{t("customer.emptyCartDesc", "Tap any item to add it to your list")}</p>
               </div>
             ) : (
               <>
@@ -70,13 +72,13 @@ export default function CartSheet() {
                   {items.map((item) => (
                     <div key={item.id} className="flex items-center gap-3 bg-ui-surface rounded-2xl p-3">
                       <div className="size-16 relative rounded-xl overflow-hidden shrink-0">
-                        <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" />
+                        <Image src={item.image} alt={getLocalized(item.name)} fill sizes="64px" className="object-cover" />
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <p className="font-display font-semibold text-sm text-ui-ink truncate">{item.name}</p>
+                        <p className="font-display font-semibold text-sm text-ui-ink truncate">{getLocalized(item.name)}</p>
                         {item.options && (
-                          <p className="text-xs text-ui-ink-muted mt-0.5">{item.options}</p>
+                          <p className="text-xs text-ui-ink-muted mt-0.5">{getLocalized(item.options)}</p>
                         )}
                         <p className="font-mono text-sm text-ui-ink font-semibold mt-1">
                           ${(item.price * item.qty).toFixed(2)}
@@ -111,7 +113,7 @@ export default function CartSheet() {
                 </div>
 
                 <div className="px-5 py-4 border-t border-ui-line shrink-0 flex items-center justify-between">
-                  <span className="text-sm text-ui-ink-muted font-medium">Total</span>
+                  <span className="text-sm text-ui-ink-muted font-medium">{t("customer.total", "Total")}</span>
                   <span className="font-mono font-bold text-xl text-ui-ink">${totalPrice.toFixed(2)}</span>
                 </div>
               </>

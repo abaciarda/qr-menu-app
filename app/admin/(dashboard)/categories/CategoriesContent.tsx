@@ -16,6 +16,8 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import ImageUploadCloudinary from "@/components/ui/image-upload-cloudinary";
+import { MultilingualInput } from "@/components/ui/multilingual-input";
+import { useLanguage } from "@/lib/i18n/context";
 
 import {
     CreateCategoryFormValues,
@@ -64,6 +66,7 @@ export default function CategoriesContent({
     initialOptionGroups: OptionGroupRow[];
 }) {
     const router = useRouter();
+    const { t, getLocalized } = useLanguage();
     const [categories, setCategories] = useState(initialCategories);
     const [optionGroups, setOptionGroups] = useState(initialOptionGroups);
     const [isPending, startTransition] = useTransition();
@@ -259,40 +262,40 @@ export default function CategoriesContent({
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b pb-6">
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight font-heading">
-                        Categories &amp; Option Groups
+                        {t("categories.title", "Categories & Option Groups")}
                     </h1>
                     <p className="text-sm text-muted-foreground mt-1">
-                        Organize digital menu slide categories and customer customization options
+                        {t("categories.subtitle", "Organize digital menu slide categories and customer customization options")}
                     </p>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
                     <Button variant="outline" onClick={() => setIsCreateGroupOpen(true)} className="rounded-xl">
-                        <Sliders className="h-4 w-4 mr-1.5" /> Add Option Group
+                        <Sliders className="h-4 w-4 mr-1.5" /> {t("categories.addOptionGroup", "Add Option Group")}
                     </Button>
                     <Button onClick={() => setIsCreateCatOpen(true)} className="rounded-xl">
-                        <Plus className="h-4 w-4 mr-1.5" /> Add Category
+                        <Plus className="h-4 w-4 mr-1.5" /> {t("categories.addCategory", "Add Category")}
                     </Button>
                 </div>
             </div>
 
             <div className="space-y-4">
                 <h2 className="text-lg font-semibold tracking-tight font-heading flex items-center gap-2">
-                    <Layers className="h-5 w-5 text-primary" /> Categories ({categories.length})
+                    <Layers className="h-5 w-5 text-primary" /> {t("common.categoriesAndOptions", "Categories")} ({categories.length})
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {categories.map((cat) => (
                         <Card key={cat.id} className="overflow-hidden">
                             <div className="h-32 relative bg-muted -mt-4">
-                                <Image src={cat.image} alt={cat.name} fill className="object-cover" />
+                                <Image src={cat.image} alt={getLocalized(cat.name)} fill className="object-cover" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                                 <div className="absolute top-3 right-3">
                                     <Badge variant={cat.isActive ? "default" : "secondary"}>
-                                        {cat.isActive ? "Active" : "Hidden"}
+                                        {cat.isActive ? t("common.active", "Active") : t("common.inactive", "Hidden")}
                                     </Badge>
                                 </div>
                                 <div className="absolute bottom-3 left-3 text-white">
-                                    <p className="font-bold text-lg leading-tight font-heading">{cat.name}</p>
-                                    <p className="text-xs text-white/80 font-mono">{cat.productCount} products</p>
+                                    <p className="font-bold text-lg leading-tight font-heading">{getLocalized(cat.name)}</p>
+                                    <p className="text-xs text-white/80 font-mono">{cat.productCount} {t("common.products", "products").toLowerCase()}</p>
                                 </div>
                             </div>
 
@@ -403,18 +406,17 @@ export default function CategoriesContent({
                                 {createCatError}
                             </div>
                         )}
+                        <MultilingualInput
+                            id="create-cat-name"
+                            label={t("categories.categoryName", "Category Name")}
+                            required
+                            value={watchCreate("name") || ""}
+                            onChange={(val) => setValueCreate("name", val)}
+                            placeholder="e.g. Cocktails & Smoothies"
+                        />
+                        {createErrors.name && <p className="text-xs text-destructive">{createErrors.name.message}</p>}
                         <div className="space-y-2">
-                            <Label htmlFor="create-cat-name">Category Name *</Label>
-                            <Input
-                                id="create-cat-name"
-                                placeholder="e.g. Cocktails & Smoothies"
-                                {...registerCreate("name")}
-                                className="h-10 rounded-xl"
-                            />
-                            {createErrors.name && <p className="text-xs text-destructive">{createErrors.name.message}</p>}
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Category Image *</Label>
+                            <Label>{t("categories.image", "Category Image")} *</Label>
                             <ImageUploadCloudinary
                                 value={watchCreate("image") || ""}
                                 onChange={(url) => setValueCreate("image", url)}
@@ -423,7 +425,7 @@ export default function CategoriesContent({
                             {createErrors.image && <p className="text-xs text-destructive">{createErrors.image.message}</p>}
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="create-cat-sort">Sort Order</Label>
+                            <Label htmlFor="create-cat-sort">{t("categories.sortOrder", "Sort Order")}</Label>
                             <Input
                                 id="create-cat-sort"
                                 type="number"
@@ -434,10 +436,10 @@ export default function CategoriesContent({
                         </div>
                         <DialogFooter>
                             <Button type="button" variant="outline" onClick={() => setIsCreateCatOpen(false)}>
-                                Cancel
+                                {t("common.cancel", "Cancel")}
                             </Button>
                             <Button type="submit" disabled={isCreating}>
-                                {isCreating ? "Creating..." : "Create Category"}
+                                {isCreating ? t("common.loading", "Creating...") : t("categories.addCategory", "Create Category")}
                             </Button>
                         </DialogFooter>
                     </form>
@@ -447,9 +449,9 @@ export default function CategoriesContent({
             <Dialog open={isEditCatOpen} onOpenChange={setIsEditCatOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Edit Category</DialogTitle>
+                        <DialogTitle>{t("categories.editCategory", "Edit Category")}</DialogTitle>
                         <DialogDescription>
-                            Update &quot;{editingCategory?.name}&quot; — changes reflect on the customer menu immediately.
+                            Update &quot;{getLocalized(editingCategory?.name)}&quot; — changes reflect on the customer menu immediately.
                         </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleEditSubmit(onEditCategory)} className="space-y-4 pt-2">
@@ -460,15 +462,14 @@ export default function CategoriesContent({
                                 {editCatError}
                             </div>
                         )}
-                        <div className="space-y-2">
-                            <Label htmlFor="edit-cat-name">Category Name</Label>
-                            <Input
-                                id="edit-cat-name"
-                                {...registerEdit("name")}
-                                className="h-10 rounded-xl"
-                            />
-                            {editErrors.name && <p className="text-xs text-destructive">{editErrors.name.message}</p>}
-                        </div>
+                        <MultilingualInput
+                            id="edit-cat-name"
+                            label={t("categories.categoryName", "Category Name")}
+                            required
+                            value={watchEdit("name") || ""}
+                            onChange={(val) => setValueEdit("name", val)}
+                        />
+                        {editErrors.name && <p className="text-xs text-destructive">{editErrors.name.message}</p>}
                         <div className="space-y-2">
                             <Label>Category Image</Label>
                             <ImageUploadCloudinary

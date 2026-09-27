@@ -1,6 +1,7 @@
 "use client";
 
 import { useSidebar } from "@/app/context/SidebarContext";
+import { useLanguage } from "@/lib/i18n/context";
 import { AnimatePresence, motion } from "framer-motion";
 import { HeartIcon, HomeIcon, MapPinIcon, PhoneIcon, XIcon } from "lucide-react";
 import Link from "next/link";
@@ -13,11 +14,6 @@ export interface RestaurantConfigProps {
   googleMapsUrl?: string | null;
   instagramUrl?: string | null;
 }
-
-const navItems = [
-  { label: "Homepage", href: "/", icon: HomeIcon },
-  { label: "Favorites", href: "/favorites", icon: HeartIcon },
-];
 
 const drawerVariants = {
   hidden: { x: "-100%" },
@@ -34,10 +30,16 @@ const drawerVariants = {
 export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
   const { isOpen, close } = useSidebar();
   const pathname = usePathname();
+  const { t, getLocalized } = useLanguage();
+
+  const navItems = [
+    { label: t("customer.menu", "Homepage"), href: "/", icon: HomeIcon },
+    { label: t("customer.favorites", "Favorites"), href: "/favorites", icon: HeartIcon },
+  ];
 
   const contactItems = [
     config?.phone && {
-      label: "Call Us",
+      label: t("customer.callWaiter", "Call Us"),
       href: `tel:${config.phone.replace(/\s+/g, "")}`,
       external: false,
       icon: <PhoneIcon size={20} strokeWidth={2} className="text-ui-ink-muted" />,
@@ -53,7 +55,7 @@ export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
       ),
     },
     config?.googleMapsUrl && {
-      label: "Get Directions",
+      label: t("customer.contactUs", "Get Directions"),
       href: config.googleMapsUrl,
       external: true,
       icon: <MapPinIcon size={20} strokeWidth={2} className="text-ui-ink-muted" />,
@@ -97,7 +99,7 @@ export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
                 onClick={close}
                 className="uppercase font-extrabold text-lg tracking-tight font-display text-ui-ink truncate mr-2"
               >
-                {config?.name || "Atlas Restaurant"}
+                {getLocalized(config?.name) || "QR Menu"}
               </Link>
 
               <button
@@ -133,7 +135,7 @@ export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
 
                 <div className="flex flex-col gap-1">
                   <p className="text-xs font-mono text-ui-ink-muted uppercase tracking-widest px-3 mb-1">
-                    Contact
+                    {t("customer.contactUs", "Contact")}
                   </p>
 
                   {contactItems.map(({ label, href, icon, external }) => (
@@ -153,7 +155,7 @@ export default function Sidebar({ config }: { config: RestaurantConfigProps }) {
 
             <div className="mt-auto pt-4 border-t border-ui-line">
               <p className="text-xs text-ui-ink-muted text-center font-mono truncate">
-                {config?.name || "QR Menu"} © 2026
+                {getLocalized(config?.name) || "QR Menu"} © 2026
               </p>
             </div>
           </motion.div>
