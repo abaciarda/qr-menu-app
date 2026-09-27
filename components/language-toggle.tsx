@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { Check, Globe } from "lucide-react";
+import { useLanguage } from "@/lib/i18n/context";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,10 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useLanguage } from "@/lib/i18n/context";
-import { DE, GB, TR } from "country-flag-icons/react/3x2";
-import { Check, Globe } from "lucide-react";
-import { useEffect, useState } from "react";
+import { TR, GB, DE } from "country-flag-icons/react/3x2";
 
 const FLAG_COMPONENTS = {
   TR,
@@ -93,5 +93,3 @@ export function LanguageToggle({ variant = "outline", showLabel = true, classNam
     </DropdownMenu>
   );
 }
-
-

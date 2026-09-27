@@ -5,12 +5,13 @@ export interface LanguageOption {
   name: string;
   nativeName: string;
   countryCode: 'TR' | 'GB' | 'DE';
+  flag?: string;
 }
 
 export const SUPPORTED_LANGUAGES: LanguageOption[] = [
-  { code: 'tr', name: 'Turkish', nativeName: 'Türkçe', countryCode: 'TR' },
-  { code: 'en', name: 'English', nativeName: 'English', countryCode: 'GB' },
-  { code: 'de', name: 'German', nativeName: 'Deutsch', countryCode: 'DE' },
+  { code: 'tr', name: 'Turkish', nativeName: 'Türkçe', countryCode: 'TR', flag: '🇹🇷' },
+  { code: 'en', name: 'English', nativeName: 'English', countryCode: 'GB', flag: '🇬🇧' },
+  { code: 'de', name: 'German', nativeName: 'Deutsch', countryCode: 'DE', flag: '🇩🇪' },
 ];
 
 export interface Dictionary {
