@@ -1,15 +1,32 @@
 "use client";
 
-import CategoryHeader from "@/app/components/CategoryHeader";
 import ProductCard from "@/app/components/cards/ProductCard";
+import ProductPopup from "@/app/components/cards/ProductPopup";
+import CategoryHeader from "@/app/components/CategoryHeader";
 import ContentAnimation from "@/app/components/ContentAnimation";
 import { useFavorites } from "@/app/context/FavoritesContext";
 import { useLanguage } from "@/lib/i18n/context";
+import { OptionGroupDTO, RecommendedItemDTO } from "@/types/category";
 import { HeartIcon } from "lucide-react";
+import { useState } from "react";
+
+type SavedItem = {
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  optionGroups: OptionGroupDTO[];
+  recommended: RecommendedItemDTO[];
+};
+
+const EMPTY_OPTION_GROUPS: OptionGroupDTO[] = [];
+const EMPTY_RECOMMENDED: RecommendedItemDTO[] = [];
 
 export default function FavoritesPage() {
   const { favorites, isLoaded } = useFavorites();
   const { t } = useLanguage();
+
+  const [selected, setSelected] = useState<SavedItem | null>(null);
 
   if (!isLoaded) {
     return (
@@ -64,10 +81,22 @@ export default function FavoritesPage() {
               image={item.image}
               optionGroups={item.optionGroups}
               recommended={item.recommended}
+              onSelect={() => setSelected(item)}
             />
           ))}
         </ContentAnimation>
       </section>
+
+      <ProductPopup
+        name={selected?.name ?? ""}
+        description={selected?.description ?? ""}
+        price={selected?.price ?? 0}
+        image={selected?.image ?? ""}
+        optionGroups={selected?.optionGroups ?? EMPTY_OPTION_GROUPS}
+        recommended={selected?.recommended ?? EMPTY_RECOMMENDED}
+        open={selected !== null}
+        onClose={() => setSelected(null)}
+      />
     </div>
   );
 }
