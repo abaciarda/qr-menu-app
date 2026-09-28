@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { OptionGroup, RecommendedItem } from "@/types/category";
 import ProductPopup from "./ProductPopup";
 import { useLanguage } from "@/lib/i18n/context";
@@ -18,6 +18,10 @@ type ProductCardProps = {
 const BLUR_DATA_URL =
   "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWY3Ii8+PC9zdmc+";
 
+function getNextImageUrl(src: string, width = 828, quality = 75): string {
+  return `/_next/image?url=${encodeURIComponent(src)}&w=${width}&q=${quality}`;
+}
+
 export default function ProductCard({
   name = "Burger",
   description = "",
@@ -28,18 +32,27 @@ export default function ProductCard({
 }: Partial<ProductCardProps>) {
   const [open, setOpen] = useState(false);
   const { getLocalized } = useLanguage();
+  const preloaded = useRef(false);
 
   const localizedName = getLocalized(name);
   const localizedDesc = getLocalized(description);
 
+  const preloadImage = useCallback(() => {
+    if (preloaded.current || !image) return;
+    preloaded.current = true;
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.href = getNextImageUrl(image);
+    document.head.appendChild(link);
+  }, [image]);
+
   return (
     <>
-      <div className="hidden" aria-hidden="true">
-        <Image src={image} alt="" width={448} height={256} priority />
-      </div>
-
       <div
         onClick={() => setOpen(true)}
+        onMouseEnter={preloadImage}
+        onTouchStart={preloadImage}
         className="flex gap-4 bg-ui-surface px-4 py-4 rounded-2xl cursor-pointer hoverable-btn"
       >
         <div className="flex flex-col min-w-0 flex-1 justify-center gap-1">

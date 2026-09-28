@@ -4,6 +4,7 @@ import Image from "next/image";
 import { XIcon, MinusIcon, PlusIcon, HeartIcon } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useCart } from "@/app/context/CartContext";
 import { useFavorites } from "@/app/context/FavoritesContext";
 import { OptionGroup, RecommendedItem } from "@/types/category";
@@ -74,6 +75,7 @@ function OptionPicker({
 export default function ProductPopup({ name, description, price, image, optionGroups, recommended, open, onClose }: ProductPopupProps) {
   const [qty, setQty] = useState(1);
   const [selections, setSelections] = useState<Record<string, string>>({});
+  const [mounted, setMounted] = useState(false);
   const { addItem, openCart } = useCart();
   const { toggle, isFavorite } = useFavorites();
   const { t, getLocalized } = useLanguage();
@@ -83,6 +85,7 @@ export default function ProductPopup({ name, description, price, image, optionGr
 
   const favorited = isFavorite(name);
 
+  useEffect(() => { setMounted(true); }, []);
   useEffect(() => {
     if (open) { setSelections({}); setQty(1); }
   }, [open]);
@@ -97,25 +100,28 @@ export default function ProductPopup({ name, description, price, image, optionGr
     .filter(Boolean)
     .join(", ") || null;
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 bg-ui-ink/40 backdrop-blur-sm z-50 flex items-end justify-center font-sans"
+          className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center font-sans"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.18, ease: "easeOut" }}
           onMouseDown={(e) => {
             if (e.target === e.currentTarget) onClose();
           }}
         >
           <motion.div
             className="w-full max-w-md max-h-[87vh] bg-ui-background rounded-t-2xl overflow-hidden flex flex-col relative"
+            style={{ willChange: "transform" }}
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
-            transition={{ type: "tween", duration: 0.28, ease: "easeOut" }}
+            transition={{ type: "spring", damping: 32, stiffness: 360, mass: 0.8 }}
             drag="y"
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0, bottom: 0.7 }}
@@ -126,7 +132,10 @@ export default function ProductPopup({ name, description, price, image, optionGr
               }
             }}
           >
-            <div className="absolute top-2.5 left-1/2 -translate-x-1/2 z-20 w-12 h-1.5 rounded-full bg-white/60 backdrop-blur-md shadow-sm pointer-events-none" />
+            <div
+              className="absolute top-2.5 left-1/2 -translate-x-1/2 z-20 w-12 h-1.5 rounded-full bg-white/60 shadow-sm"
+              style={{ touchAction: "none" }}
+            />
 
             <div className="h-64 relative shrink-0 bg-ui-surface">
               <Image
@@ -143,14 +152,14 @@ export default function ProductPopup({ name, description, price, image, optionGr
 
               <button
                 onClick={onClose}
-                className="absolute top-4 left-4 z-10 w-10 h-10 flex items-center justify-center bg-white/15 backdrop-blur-sm border border-white/20 rounded-full"
+                className="absolute top-4 left-4 z-10 w-10 h-10 flex items-center justify-center bg-black/30 border border-white/20 rounded-full"
               >
                 <XIcon size={18} className="text-white" />
               </button>
 
               <button
                 onClick={() => toggle({ name, description, price, image, optionGroups, recommended })}
-                className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-white/15 backdrop-blur-sm border border-white/20 rounded-full transition-colors"
+                className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-black/30 border border-white/20 rounded-full transition-colors"
               >
                 <HeartIcon
                   size={18}
@@ -196,7 +205,7 @@ export default function ProductPopup({ name, description, price, image, optionGr
                       {recommended.map((item) => (
                         <div key={item.name} className="shrink-0 w-32 bg-ui-surface rounded-xl overflow-hidden">
                           <div className="h-20 relative">
-                            <Image src={item.image} alt={getLocalized(item.name)} fill sizes="128px" className="object-cover" />
+                            <Image src={item.image} alt={getLocalized(item.name)} fill sizes="128px" loading="lazy" className="object-cover" />
                           </div>
                           <div className="px-2.5 py-2">
                             <p className="text-xs text-ui-ink font-medium truncate">{getLocalized(item.name)}</p>
@@ -241,6 +250,7 @@ export default function ProductPopup({ name, description, price, image, optionGr
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
