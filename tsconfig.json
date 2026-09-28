@@ -22,7 +22,9 @@
       "@/*": ["./*"]
     },
     "types": [
-      "node"
+      "node",
+      "vitest/globals",
+      "@testing-library/jest-dom"
     ]
   },
   "include": [
