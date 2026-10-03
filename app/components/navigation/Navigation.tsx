@@ -21,20 +21,14 @@ export default function Navigation() {
   return (
     <nav className="sticky z-10 bg-ui-background top-0 border-b border-ui-line">
       <div className="max-w-7xl w-full mx-auto flex items-center justify-between px-5 py-3">
-        <button
-          onClick={open}
-          aria-label="Open menu"
-          className="w-10 h-10 flex items-center justify-center bg-ui-surface rounded-full hoverable-btn"
-        >
-          <MenuIcon strokeWidth={2} />
-        </button>
-
-        <Link href={"/"} className="uppercase font-extrabold text-lg tracking-tight font-display">
-          QR Menu
-        </Link>
-
         <div className="flex items-center gap-2">
-          <LanguageToggle variant="ghost" showLabel={false} className="size-10 p-0 rounded-full bg-ui-surface flex items-center justify-center border-0 overflow-hidden relative hoverable-btn" />
+          <button
+            onClick={open}
+            aria-label="Open menu"
+            className="w-10 h-10 flex items-center justify-center bg-ui-surface rounded-full hoverable-btn"
+          >
+            <MenuIcon strokeWidth={2} />
+          </button>
           
           {mounted && (
             <button
@@ -45,6 +39,14 @@ export default function Navigation() {
               {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
             </button>
           )}
+        </div>
+
+        <Link href={"/"} className="uppercase font-extrabold text-lg tracking-tight font-display">
+          QR Menu
+        </Link>
+
+        <div className="flex items-center gap-2">
+          <LanguageToggle variant="ghost" showLabel={false} className="size-10 p-0 rounded-full bg-ui-surface flex items-center justify-center border-0 overflow-hidden relative hoverable-btn" />
           
           <button
             onClick={openCart}
