@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import ImageUploadCloudinary from "@/components/ui/image-upload-cloudinary";
+import ImageUpload from "@/components/ui/image-upload";
 import { MultilingualInput } from "@/components/ui/multilingual-input";
 import { useLanguage } from "@/lib/i18n/context";
 
@@ -417,7 +417,7 @@ export default function CategoriesContent({
                         {createErrors.name && <p className="text-xs text-destructive">{createErrors.name.message}</p>}
                         <div className="space-y-2">
                             <Label>{t("categories.image", "Category Image")} *</Label>
-                            <ImageUploadCloudinary
+                            <ImageUpload
                                 value={watchCreate("image") || ""}
                                 onChange={(url) => setValueCreate("image", url)}
                                 disabled={isCreating}
@@ -472,7 +472,7 @@ export default function CategoriesContent({
                         {editErrors.name && <p className="text-xs text-destructive">{editErrors.name.message}</p>}
                         <div className="space-y-2">
                             <Label>Category Image</Label>
-                            <ImageUploadCloudinary
+                            <ImageUpload
                                 value={watchEdit("image") || ""}
                                 onChange={(url) => setValueEdit("image", url)}
                                 disabled={isEditing}

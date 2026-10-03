@@ -22,7 +22,7 @@ import {
 } from "@/lib/validations/settings";
 import { updateRestaurantConfigAction } from "./actions";
 import { generateQRCode, downloadQRCode } from "@/lib/utils/qr";
-import ImageUploadCloudinary from "@/components/ui/image-upload-cloudinary";
+import ImageUpload from "@/components/ui/image-upload";
 import { MultilingualInput } from "@/components/ui/multilingual-input";
 import { MultilingualTextarea } from "@/components/ui/multilingual-textarea";
 import { useLanguage } from "@/lib/i18n/context";
@@ -180,7 +180,7 @@ export default function SettingsContent({
 
                         <div className="space-y-2">
                             <Label>{t("settings.logo", "Store Logo")}</Label>
-                            <ImageUploadCloudinary
+                            <ImageUpload
                                 value={watch("logo") || ""}
                                 onChange={(url) => setValue("logo", url)}
                                 disabled={isSubmitting || isPending}

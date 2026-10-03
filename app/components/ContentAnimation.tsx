@@ -36,7 +36,7 @@ export default function ContentAnimation({ children }: { children: React.ReactNo
             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
         >
             {React.Children.map(children, (child) => (
-                <motion.div variants={itemVariants} style={{ willChange: "transform, opacity" }}>
+                <motion.div variants={itemVariants}>
                     {child}
                 </motion.div>
             ))}

@@ -6,7 +6,7 @@ describe('Category & Option Group CRUD Validation Schema (TDD)', () => {
     it('validates correct category data', () => {
       const payload = {
         name: 'tr:Tatlılar|en:Desserts',
-        image: 'https://res.cloudinary.com/demo/image/upload/v1/desserts.jpg',
+        image: 'https://youraccount.public.blob.vercel-storage.com/desserts.jpg',
         sortOrder: 2,
       };
 

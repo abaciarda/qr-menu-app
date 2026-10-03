@@ -110,10 +110,11 @@ export default function ProductPopup({
       {open && (
         <motion.div
           className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center font-sans"
+          style={{ willChange: "opacity" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.18, ease: "easeOut" }}
+          transition={{ duration: 0.22, ease: "easeOut" }}
           onMouseDown={(e) => {
             if (e.target === e.currentTarget) onClose();
           }}
@@ -150,8 +151,9 @@ export default function ProductPopup({
                   alt={localizedName}
                   fill
                   priority
+                  fetchPriority="high"
                   sizes="(max-width: 448px) 100vw, 448px"
-                  quality={70}
+                  quality={85}
                   placeholder="blur"
                   blurDataURL={BLUR_DATA_URL}
                   className="object-cover"
@@ -228,6 +230,8 @@ export default function ProductPopup({
                               sizes="128px"
                               loading="lazy"
                               decoding="async"
+                              placeholder="blur"
+                              blurDataURL={BLUR_DATA_URL}
                               className="object-cover"
                             />
                           </div>

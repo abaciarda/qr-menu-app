@@ -16,9 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   ]);
 
   if (!categoryData) {
-    return {
-      title: "Category Not Found",
-    };
+    return { title: "Category Not Found" };
   }
 
   const title = `${categoryData.name} Menu`;

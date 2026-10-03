@@ -25,10 +25,11 @@ export default function ProductListWithPopup({
   return (
     <>
       <ContentAnimation>
-        {products.map((product) => (
+        {products.map((product, i) => (
           <ProductCard
-            key={product.name}
+            key={product.id}
             {...product}
+            index={i}
             optionGroups={optionGroups}
             recommended={recommended}
             onSelect={() => setSelected(product)}

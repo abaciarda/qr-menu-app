@@ -9,7 +9,7 @@ describe('Product CRUD Validation Schema (TDD)', () => {
         categoryId: 1,
         price: 250,
         description: 'tr:Acılı zırh kıyması|en:Spicy minced meat',
-        image: 'https://res.cloudinary.com/demo/image/upload/v1/kebab.jpg',
+        image: 'https://youraccount.public.blob.vercel-storage.com/kebab.jpg',
         isAvailable: true,
         sortOrder: 1,
       };

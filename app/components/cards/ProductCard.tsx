@@ -2,8 +2,7 @@
 
 import { useLanguage } from "@/lib/i18n/context";
 import { OptionGroup, RecommendedItem } from "@/types/category";
-import Image, { getImageProps } from "next/image";
-import { useCallback, useRef } from "react";
+import Image from "next/image";
 
 export type ProductCardProps = {
   name: string;
@@ -12,6 +11,7 @@ export type ProductCardProps = {
   image: string;
   optionGroups?: OptionGroup[];
   recommended?: RecommendedItem[];
+  index?: number;
   onSelect?: () => void;
 };
 
@@ -23,39 +23,21 @@ export default function ProductCard({
   description = "",
   price = 0,
   image = "",
+  index = 99,
   onSelect,
 }: Partial<ProductCardProps>) {
   const { getLocalized } = useLanguage();
-  const preloaded = useRef(false);
 
   const localizedName = getLocalized(name ?? "");
   const localizedDesc = getLocalized(description ?? "");
 
-  const preloadImage = useCallback(() => {
-    if (preloaded.current || !image) return;
-    preloaded.current = true;
-    const { props } = getImageProps({
-      src: image,
-      alt: "",
-      fill: true,
-      sizes: "(max-width: 448px) 100vw, 448px",
-      quality: 70,
-    });
-    const link = document.createElement("link");
-    link.rel = "preload";
-    link.as = "image";
-    link.setAttribute("imagesrcset", props.srcSet ?? "");
-    link.setAttribute("imagesizes", props.sizes ?? "");
-    link.href = props.src;
-    document.head.appendChild(link);
-  }, [image]);
+  const isAboveFold = index < 3;
 
   return (
-    <div
+    <button
+      type="button"
       onClick={onSelect}
-      onMouseEnter={preloadImage}
-      onTouchStart={preloadImage}
-      className="flex gap-4 bg-ui-surface px-4 py-4 rounded-2xl cursor-pointer hoverable-btn"
+      className="w-full text-left flex gap-4 bg-ui-surface px-4 py-4 rounded-2xl cursor-pointer hoverable-btn active:scale-[0.98] transition-transform duration-100 touch-manipulation select-none"
     >
       <div className="flex flex-col min-w-0 flex-1 justify-center gap-1">
         <p className="font-display font-semibold text-ui-ink truncate">{localizedName}</p>
@@ -65,17 +47,19 @@ export default function ProductCard({
         </p>
       </div>
 
-      <div className="size-24 shrink-0 relative rounded-xl overflow-hidden bg-ui-surface">
+      <div className="size-24 shrink-0 relative rounded-xl overflow-hidden bg-ui-surface pointer-events-none">
         <Image
           src={image}
           alt={localizedName}
           fill
           sizes="96px"
+          priority={isAboveFold}
+          loading={isAboveFold ? "eager" : "lazy"}
           placeholder="blur"
           blurDataURL={BLUR_DATA_URL}
           className="object-cover"
         />
       </div>
-    </div>
+    </button>
   );
 }

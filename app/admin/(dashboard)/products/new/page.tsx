@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import ImageUploadCloudinary from "@/components/ui/image-upload-cloudinary";
+import ImageUpload from "@/components/ui/image-upload";
 import { MultilingualInput } from "@/components/ui/multilingual-input";
 import { MultilingualTextarea } from "@/components/ui/multilingual-textarea";
 import { useForm } from "react-hook-form";
@@ -196,7 +196,7 @@ export default function NewProductPage() {
               <CardTitle className="text-base font-semibold">{t("products.image", "Product Photo")}</CardTitle>
             </CardHeader>
             <CardContent className="p-6">
-              <ImageUploadCloudinary
+              <ImageUpload
                 value={watch("image") || ""}
                 onChange={(url) => setValue("image", url)}
                 disabled={isSubmitting}

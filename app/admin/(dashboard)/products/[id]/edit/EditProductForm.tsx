@@ -18,7 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import ImageUploadCloudinary from "@/components/ui/image-upload-cloudinary";
+import ImageUpload from "@/components/ui/image-upload";
 import { ProductItem } from "@/lib/types";
 import {
   updateProductSchema,
@@ -283,11 +283,11 @@ export default function EditProductForm({ product }: { product: ProductItem }) {
                 Product Photo
               </CardTitle>
               <CardDescription className="text-xs">
-                Upload an image to Cloudinary storage
+                Upload an image to Vercel Blob storage
               </CardDescription>
             </CardHeader>
             <CardContent className="p-6">
-              <ImageUploadCloudinary
+              <ImageUpload
                 value={watch("image") || ""}
                 onChange={(url) => setValue("image", url)}
                 disabled={isSubmitting}

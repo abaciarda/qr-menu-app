@@ -12,7 +12,9 @@ export interface ProductDTO {
     description: string;
     price: number;
     image: string;
+    blurDataURL?: string;
 }
+
 
 export interface OptionGroupDTO {
     id: number;

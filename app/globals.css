@@ -153,8 +153,20 @@ body {
   font-family: var(--font-archivo), Arial, Helvetica, sans-serif;
 }
 
+
+
 .hoverable-btn {
-  @apply cursor-pointer hover:bg-ui-surface-hover transition-all;
+  @apply cursor-pointer transition-all touch-manipulation select-none;
+}
+
+@media (hover: hover) {
+  .hoverable-btn:hover {
+    background-color: var(--ui-surface-hover);
+  }
+}
+
+.hoverable-btn:active {
+  background-color: var(--ui-surface-active);
 }
 
 .story-track {
@@ -165,6 +177,39 @@ body {
 .story-track::-webkit-scrollbar {
   display: none;
 }
+
+/* ─── Mobile rendering performance ─────────────────────────────────── */
+
+/* Promote images to their own compositor layer so painting them
+   doesn't block scrolling. transform:translateZ(0) is the classic
+   GPU promotion trick; translate3d forces a separate composite layer
+   in older WebKit (iOS Safari < 16). */
+img {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  /* Prevent images from blocking touch scrolling gestures */
+  touch-action: pan-y;
+}
+
+/* Framer Motion animated containers benefit from GPU compositing too */
+[style*="will-change"] {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Momentum scroll (iOS) for the popup scrollable area */
+.overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Reduce motion: skip spring animations for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 
 .dark {
   --background: oklch(0.145 0 0);
