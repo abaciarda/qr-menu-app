@@ -10,8 +10,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 
-const BLUR_DATA_URL =
-  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWY3Ii8+PC9zdmc+";
+
 
 export type ProductPopupProps = {
   name: string;
@@ -154,8 +153,6 @@ export default function ProductPopup({
                   fetchPriority="high"
                   sizes="(max-width: 448px) 100vw, 448px"
                   quality={85}
-                  placeholder="blur"
-                  blurDataURL={BLUR_DATA_URL}
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
@@ -230,8 +227,6 @@ export default function ProductPopup({
                               sizes="128px"
                               loading="lazy"
                               decoding="async"
-                              placeholder="blur"
-                              blurDataURL={BLUR_DATA_URL}
                               className="object-cover"
                             />
                           </div>

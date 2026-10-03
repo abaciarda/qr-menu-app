@@ -16,8 +16,7 @@ export type ProductCardProps = {
   onSelect?: () => void;
 };
 
-const BLUR_DATA_URL =
-  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWY3Ii8+PC9zdmc+";
+
 
 export default function ProductCard({
   name = "Burger",
@@ -66,8 +65,7 @@ export default function ProductCard({
           sizes="96px"
           priority={isAboveFold}
           loading={isAboveFold ? "eager" : "lazy"}
-          placeholder="blur"
-          blurDataURL={BLUR_DATA_URL}
+          quality={60}
           className="object-cover"
         />
       </div>
