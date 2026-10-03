@@ -62,10 +62,10 @@ export default function ProductCard({
           src={image}
           alt={localizedName}
           fill
-          sizes="96px"
+          sizes="448px"
           priority={isAboveFold}
           loading={isAboveFold ? "eager" : "lazy"}
-          quality={60}
+          quality={85}
           className="object-cover"
         />
       </div>

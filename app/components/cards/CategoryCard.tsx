@@ -16,6 +16,7 @@ export default function CategoryCard({ name, image, slug, productCount } : Slide
                 src={ image }
                 fill
                 sizes="(max-width: 640px) 100vw, 400px"
+                quality={90}
                 alt={`${localizedName} Category`}
                 className="object-cover"
             />
