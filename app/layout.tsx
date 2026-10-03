@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     siteName: "QR Menu",
     images: [
       {
-        url: "/images/categories/burger.png",
+        url: "/images/qrmenu.webp",
         width: 1200,
         height: 630,
         alt: "QR Menu Digital Restaurant Experience",
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "QR Menu — Scan & Order",
     description: "Browse our full digital restaurant menu, customize your items, and order directly from your table.",
-    images: ["/images/categories/burger.png"],
+    images: ["/images/qrmenu.webp"],
   },
   robots: {
     index: true,

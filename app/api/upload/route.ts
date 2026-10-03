@@ -1,18 +1,6 @@
 import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
 
-/**
- * POST /api/upload
- *
- * Receives a file from the browser (multipart/form-data) and stores it in
- * Vercel Blob. Returns the permanent CDN URL.
- *
- * The file is streamed directly to Vercel Blob's edge storage — no base64
- * encoding, no intermediate server buffering, minimal latency.
- *
- * Requires BLOB_READ_WRITE_TOKEN in environment variables (set automatically
- * when you connect Vercel Blob to your project in the Vercel dashboard).
- */
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
   const file = formData.get("file") as File | null;
@@ -38,7 +26,6 @@ export async function POST(request: NextRequest) {
 
     const blob = await put(filename, file, {
       access: "public",
-      // Cache at Vercel's CDN edge for 1 year
       cacheControlMaxAge: 31536000,
     });
 
