@@ -2,7 +2,8 @@
 
 import { useLanguage } from "@/lib/i18n/context";
 import { OptionGroup, RecommendedItem } from "@/types/category";
-import Image from "next/image";
+import NextImage from "next/image";
+import { useState, useCallback } from "react";
 
 export type ProductCardProps = {
   name: string;
@@ -27,16 +28,26 @@ export default function ProductCard({
   onSelect,
 }: Partial<ProductCardProps>) {
   const { getLocalized } = useLanguage();
+  const [preloaded, setPreloaded] = useState(false);
 
   const localizedName = getLocalized(name ?? "");
   const localizedDesc = getLocalized(description ?? "");
 
   const isAboveFold = index < 3;
 
+  const preloadImage = useCallback(() => {
+    if (preloaded || !image) return;
+    setPreloaded(true);
+    const img = new Image();
+    img.src = image;
+  }, [image, preloaded]);
+
   return (
     <button
       type="button"
       onClick={onSelect}
+      onMouseEnter={preloadImage}
+      onTouchStart={preloadImage}
       className="w-full text-left flex gap-4 bg-ui-surface px-4 py-4 rounded-2xl cursor-pointer hoverable-btn active:scale-[0.98] transition-transform duration-100 touch-manipulation select-none"
     >
       <div className="flex flex-col min-w-0 flex-1 justify-center gap-1">
@@ -48,7 +59,7 @@ export default function ProductCard({
       </div>
 
       <div className="size-24 shrink-0 relative rounded-xl overflow-hidden bg-ui-surface pointer-events-none">
-        <Image
+        <NextImage
           src={image}
           alt={localizedName}
           fill

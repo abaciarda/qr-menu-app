@@ -78,6 +78,15 @@ export default async function CategoryPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {categoryData.products.slice(0, 4).map((product) => (
+        <link
+          key={product.id}
+          rel="preload"
+          as="image"
+          href={product.image}
+          fetchPriority="high"
+        />
+      ))}
       <CategoryPageView categoryData={categoryData} />
     </>
   );
