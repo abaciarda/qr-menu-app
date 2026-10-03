@@ -97,7 +97,7 @@ export default function CategorySlideViewClient({ categories }: { categories: Sl
                                     src={category.image}
                                     fill
                                     priority
-                                    sizes="64px"
+                                    sizes="(max-width: 640px) 64px, (max-width: 1024px) 96px, 128px"
                                     quality={90}
                                     alt=""
                                     className="object-cover"

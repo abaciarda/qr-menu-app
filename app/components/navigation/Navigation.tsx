@@ -1,14 +1,22 @@
 "use client";
 
+import * as React from "react";
 import { useCart } from "@/app/context/CartContext";
 import { useSidebar } from "@/app/context/SidebarContext";
 import { LanguageToggle } from "@/components/language-toggle";
-import { MenuIcon, ShoppingCartIcon } from "lucide-react";
+import { MenuIcon, ShoppingCartIcon, Moon, Sun } from "lucide-react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 export default function Navigation() {
   const { open } = useSidebar();
   const { openCart, totalItems } = useCart();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <nav className="sticky z-10 bg-ui-background top-0 border-b border-ui-line">
@@ -27,6 +35,16 @@ export default function Navigation() {
 
         <div className="flex items-center gap-2">
           <LanguageToggle variant="ghost" showLabel={false} className="size-10 p-0 rounded-full bg-ui-surface flex items-center justify-center border-0 overflow-hidden relative hoverable-btn" />
+          
+          {mounted && (
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              aria-label="Toggle theme"
+              className="w-10 h-10 flex items-center justify-center bg-ui-surface rounded-full hoverable-btn"
+            >
+              {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+          )}
           
           <button
             onClick={openCart}
