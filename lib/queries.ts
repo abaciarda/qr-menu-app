@@ -1,9 +1,7 @@
 import { db } from "@/lib/db";
 import { CategoryPageDTO, SlideCategory } from "@/types/category";
-import { unstable_cache } from "next/cache";
 
-export const getCategories = unstable_cache(
-  async (): Promise<SlideCategory[]> => {
+export const getCategories = async (): Promise<SlideCategory[]> => {
     const [categories, products] = await Promise.all([
       db.orm.public.Category
         .where({ isActive: true })
@@ -29,67 +27,58 @@ export const getCategories = unstable_cache(
       image: cat.image,
       productCount: countByCategory.get(cat.id) ?? 0,
     }));
-  },
-  ["categories-list"],
-  { revalidate: 120, tags: ["categories"] }
-);
+};
 
-export const getCategoryBySlug = (slug: string): Promise<CategoryPageDTO | null> => {
-  return unstable_cache(
-    async (): Promise<CategoryPageDTO | null> => {
-      const category = await db.orm.public.Category
+export const getCategoryBySlug = async (slug: string): Promise<CategoryPageDTO | null> => {
+    const category = await db.orm.public.Category
         .select("id", "name", "slug", "image")
         .first({ slug, isActive: true });
 
-      if (!category) return null;
+    if (!category) return null;
 
-      const [products, optionGroups, recommended] = await Promise.all([
-        db.orm.public.Product
-          .where({ categoryId: category.id, isAvailable: true })
-          .select("id", "name", "description", "price", "image")
-          .orderBy((p) => p.sortOrder.asc())
-          .all(),
-        db.orm.public.OptionGroup
-          .where({ categoryId: category.id })
-          .include("options", (o) => o.orderBy((x) => x.sortOrder.asc()))
-          .orderBy((g) => g.sortOrder.asc())
-          .all(),
-        db.orm.public.RecommendedItem
-          .where({ categoryId: category.id })
-          .select("id", "name", "price", "image")
-          .orderBy((r) => r.sortOrder.asc())
-          .all(),
-      ]);
+    const [products, optionGroups, recommended] = await Promise.all([
+      db.orm.public.Product
+        .where({ categoryId: category.id, isAvailable: true })
+        .select("id", "name", "description", "price", "image")
+        .orderBy((p) => p.sortOrder.asc())
+        .all(),
+      db.orm.public.OptionGroup
+        .where({ categoryId: category.id })
+        .include("options", (o) => o.orderBy((x) => x.sortOrder.asc()))
+        .orderBy((g) => g.sortOrder.asc())
+        .all(),
+      db.orm.public.RecommendedItem
+        .where({ categoryId: category.id })
+        .select("id", "name", "price", "image")
+        .orderBy((r) => r.sortOrder.asc())
+        .all(),
+    ]);
 
-      return {
-        id: category.id,
-        name: category.name,
-        slug: category.slug,
-        image: category.image,
-        products: products.map((p) => ({
-          id: p.id,
-          name: p.name,
-          description: p.description,
-          price: Number(p.price),
-          image: p.image,
-        })),
-        optionGroups: optionGroups.map((g) => ({
-          id: g.id,
-          label: g.label,
-          required: g.isRequired,
-          options: g.options.map((o) => o.label),
-        })),
-        recommended: recommended.map((r) => ({
-          id: r.id,
-          name: r.name,
-          price: Number(r.price),
-          image: r.image,
-        })),
-      };
-    },
-    [`category-${slug}`],
-    { revalidate: 120, tags: ["categories", `category-${slug}`] }
-  )();
+    return {
+      id: category.id,
+      name: category.name,
+      slug: category.slug,
+      image: category.image,
+      products: products.map((p) => ({
+        id: p.id,
+        name: p.name,
+        description: p.description,
+        price: Number(p.price),
+        image: p.image,
+      })),
+      optionGroups: optionGroups.map((g) => ({
+        id: g.id,
+        label: g.label,
+        required: g.isRequired,
+        options: g.options.map((o) => o.label),
+      })),
+      recommended: recommended.map((r) => ({
+        id: r.id,
+        name: r.name,
+        price: Number(r.price),
+        image: r.image,
+      })),
+    };
 };
 
 const DEFAULT_CONFIG = {
@@ -107,8 +96,7 @@ const DEFAULT_CONFIG = {
   currencySymbol: "₺",
 };
 
-export const getRestaurantConfig = unstable_cache(
-  async () => {
+export const getRestaurantConfig = async () => {
     try {
       const config = await db.orm.public.RestaurantConfig
         .select(
@@ -125,10 +113,7 @@ export const getRestaurantConfig = unstable_cache(
     } catch {
       return DEFAULT_CONFIG;
     }
-  },
-  ["restaurant-config"],
-  { revalidate: 3600, tags: ["config"] }
-);
+};
 
 export * from "./queries/dashboard";
 export * from "./queries/categories";
